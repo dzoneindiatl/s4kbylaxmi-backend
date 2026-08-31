@@ -1,0 +1,34 @@
+[28-Nov-2025 11:56:02 UTC] PHP Warning:  file_get_contents(/tmp/adminer.version): Failed to open stream: Permission denied in /home/vasvijpr/superadmin.vasvi.in/public/myadmin.php on line 1377
+[28-Nov-2025 11:56:02 UTC] PHP Warning:  Trying to access array offset on false in /home/vasvijpr/superadmin.vasvi.in/public/myadmin.php on line 1386
+[28-Nov-2025 11:56:02 UTC] PHP Warning:  Trying to access array offset on false in /home/vasvijpr/superadmin.vasvi.in/public/myadmin.php on line 1386
+[03-Jun-2026 05:27:06 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[03-Jun-2026 10:26:55 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[04-Jun-2026 16:35:34 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[05-Jun-2026 04:23:50 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[05-Jun-2026 04:34:52 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[05-Jun-2026 04:59:46 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[05-Jun-2026 05:12:51 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[05-Jun-2026 11:43:03 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[05-Jun-2026 12:10:44 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[05-Jun-2026 12:11:27 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[05-Jun-2026 12:11:50 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[05-Jun-2026 12:12:12 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[05-Jun-2026 12:13:21 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[05-Jun-2026 12:13:44 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[05-Jun-2026 12:14:43 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[05-Jun-2026 12:52:40 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[05-Jun-2026 13:05:35 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[05-Jun-2026 13:38:20 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[05-Jun-2026 13:38:36 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[06-Jun-2026 02:34:43 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[06-Jun-2026 03:06:34 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[06-Jun-2026 03:19:42 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[06-Jun-2026 03:20:59 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[06-Jun-2026 03:42:15 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[06-Jun-2026 06:39:49 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[06-Jun-2026 08:44:30 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[06-Jun-2026 08:59:43 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[06-Jun-2026 09:00:00 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[08-Jun-2026 06:37:22 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[08-Jun-2026 06:47:57 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
+[10-Jun-2026 11:08:24 UTC] PHP Warning:  Maximum number of allowable file uploads has been exceeded in Unknown on line 0
