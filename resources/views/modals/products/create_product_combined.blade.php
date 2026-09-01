@@ -18,17 +18,26 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
+            <div class="mb-3">
+                <label for="" class="form-label">Product Collection</label>
+                <select name="product_collection_id" class="form-control select2" id="product_collection_id" >
+                    <option value="">Select Collection</option>
+                    @foreach($productCollection as $collections)
+                        <option value="{{ $collections->id }}" {{ old('product_collection_id',$product->collection_ids ?? '') == $collections->id ? 'selected' : '' }} >{{ $collections->title }}</option>
+                    @endforeach
+                </select>
+            </div>
 
             {{-- Main Category --}}
             <div class="mb-3">
                 @php
                 //prx($categories->toArray());
-                $grouped = $categories->groupBy('category_type_id');
-                $cats = $grouped?->toArray();
-                $categories = !empty($cats[2])?$cats[2]:[];
-                $collections = !empty($cats[1])?$cats[1]:[];
+                // $grouped = $categories->groupBy('category_type_id');
+                // $cats = $categories->toArray();
+                // $categories = !empty($cats[2])?$cats[2]:[];
+                // $collections = !empty($cats[1])?$cats[1]:[];
                 @endphp
-                <label class="form-label">Collection / Category <span class="text-danger">*</span></label>
+                <label class="form-label">Category <span class="text-danger">*</span></label>
                 <select class="form-control select2 @error('main_category_id') is-invalid @enderror"
                         name="main_category_id" id="prdct_category_id"
                         onchange="loadSubCategories()" required>

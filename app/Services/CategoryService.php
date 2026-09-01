@@ -52,8 +52,7 @@ class CategoryService
 
     public function saveCategory(array $data, int $id = null)
     {
-        // DB::beginTransaction();
-        // try {
+ 
             info("-----data------",[$data]); 
             $category = $id ? Category::findOrFail($id) : new Category();
             if($category){

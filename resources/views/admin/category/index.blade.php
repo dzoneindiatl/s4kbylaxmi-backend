@@ -183,7 +183,7 @@
                         <tr id="tableHeaders">
                             <th>Image</th>
                             <th class="sortable" data-column="name">Name <i class="sort-icon ri-sort-asc"></i></th>
-                            <th class="sortable" data-column="name">Category Type<i class="sort-icon ri-sort-asc"></i></th>
+                            {{-- <th class="sortable" data-column="name">Category Type<i class="sort-icon ri-sort-asc"></i></th> --}}
                             <th class="sortable" data-column="is_featured">Featured <i class="sort-icon ri-sort-asc"></i> </th>
                             <th class="sortable" data-column="name">Show On Menu<i class="sort-icon ri-sort-asc"></i></th>
                             <th class="sortable" data-column="show_on_menu">Show On Home<i class="sort-icon ri-sort-asc"></i></th>
