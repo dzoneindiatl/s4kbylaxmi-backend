@@ -23,6 +23,7 @@ use App\Models\ProductVariant;
 use App\Http\Requests\Product\{ProductTabRequest, ProductStep1, ProductStep2Request, ProductStep3Request};
 use App\Services\ProductTabService;
 use App\Models\ProductDetailManager;
+use App\Models\ProductCollection;
 
 use Session;
 use Validator, Response, Redirect, Str, View, File;
@@ -57,10 +58,12 @@ class MainProductController extends Controller
             $id = decrypt($token);
             $product = Product::FindOrFail($id);
         }
-        $categories = Category::where('is_deleted', 0)->whereNull('parent_id')->get();
+        $categories = Category::where('is_deleted', 0)->whereNull('parent_id')->where("is_active",1)->get();
+        $productCollection = ProductCollection::where("is_active",1)->whereNull('deleted_at')->get(); 
         
+
         $productDetailManagers = ProductDetailManager::get();
-        return view('admin.prodcuts.add-new-product', compact('categories', "product", "productDetailManagers"));
+        return view('admin.prodcuts.add-new-product', compact('categories', "product", "productDetailManagers","productCollection"));
     }
 
     public function saveStep1(ProductStep1 $request, ProductTabService $service)
