@@ -38,18 +38,7 @@
                     <i class="ri-add-line"></i>
                 </button>
             </div>
-            <div class="" data-bs-toggle="collapse" href="#collapseExample_{{ $primaryId }}" role="button" aria-expanded="false" aria-controls="collapseExample_{{ $primaryId }}">
-                <div class="form-check form-switch specialization-toggle">
-                    <input class="form-check-input specialization-toggle"
-                        type="checkbox"
-                        data-variant-id="{{ $primaryId }}"
-                        data-product-id="{{ $product_id }}"
-                        id="specialization_toggle_{{ $primaryId }}" checked>     
-                    <label class="form-check-label" for="specialization_toggle_{{ $primaryId }}">
-                        Specification
-                    </label>
-                </div>
-            </div>
+        
             <div class="form-check form-switch">
                 <input class="form-check-input out-of-stock-toggle"
                     type="checkbox"
@@ -279,20 +268,6 @@
                         @endforeach
                     </tbody>
                 </table>
-            </div>
-            <div  id="collapseExample_{{ $primaryId }}">
-                <div class="card card-body">
-                    <label for="specialization_{{ $primaryId }}" class="form-label fw-semibold">Specification</label>
-                    @if(!empty($productVariantSpecification) && count($productVariantSpecification) > 0)
-                        @foreach($productVariantSpecification as $vl)
-                            @if($vl->variant_value_id == $primaryId)
-                                <textarea class="form-control ck_content" name="content_specification_{{ $primaryId }}" id="specialization_{{ $primaryId }}" rows="4">{!! $vl->{'content_' . $primaryId} ?? '' !!}</textarea>
-                            @endif
-                        @endforeach
-                    @else 
-                        <textarea class="form-control ck_content" name="content_specification_{{ $primaryId }}" id="specialization_{{ $primaryId }}" rows="4"></textarea>   
-                    @endif          
-                </div>
             </div>
         </div>
     </div>

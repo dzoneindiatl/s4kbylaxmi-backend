@@ -87,25 +87,21 @@
                 $firstImage = getActiveFrontImg($product->id,$activeVarientId);
                 $secondImage  = getActiveBackImg($product->id,$activeVarientId);
             } 
-            // else {
-            //     $firstImage = getActiveFrontImg($product->id,$product->id);
-            //     $secondImage  = getActiveBackImg($product->id,$product->id);
-            // }
             @endphp
             @if(!empty($firstImage))
-            <td>
-                <a href="{{ env('WEBSITE_URL') .'product/product/'. productSlug($product->name) . '.html/' . $product->sku }}"
-                     target="_blank">
-					<img src="{{ env('WEBSITE_URL') . 'uploads/products/' . $firstImage }}"
-                        height="70px" width="70px" style="border-radius: 10%" class="if">
-                </a>
-            </td>
+                <td>
+                    <a href="{{ env('WEBSITE_URL') .'product/product/'. productSlug($product->name) . '.html/' . $product->sku }}"
+                        target="_blank">
+                        <img src="{{ env('WEBSITE_URL') . 'uploads/products/' . $firstImage }}"
+                            height="70px" width="70px" style="border-radius: 10%" class="if">
+                    </a>
+                </td>
             @elseif(!empty($product->frontProductImage) || !empty($product->firstProductImage)) 
          
-            <td>
-                <img src="https://commons.wikimedia.org/wiki/File:No_Image_Available.jpg" height="70px"
-                    width="70px" style="border-radius: 10%" class="elseif">
-            </td>
+                <td>
+                    <img src="https://commons.wikimedia.org/wiki/File:No_Image_Available.jpg" height="70px"
+                        width="70px" style="border-radius: 10%" class="elseif">
+                </td>
                 {{-- // <!-- <td><a href="{{ env('WEBSITE_URL'). '/'. $product->sku . '/' . productSlug($product->short_description) }}"
                 //         target="_blank">
 
@@ -114,7 +110,7 @@
                 //     </a>
                 // </td> --> --}}
      
-                @else 
+            @else 
                 <td>
                     <img src="https://commons.wikimedia.org/wiki/File:No_Image_Available.jpg" height="70px"
                         width="70px" style="border-radius: 10%" class="else">
@@ -141,9 +137,6 @@
                 <br>
                 Sub Category - {{ $product->mainSubCategory->name ?? 'Not available' }}
             </td>
-            <!-- <td class="move-line">MRP - INR {{ $product->buying_price ?? 0 }}.00 <br> Selling Price INR -
-                {{ $product->selling_price ?? 0 }}.00</td> -->
-
             <td class="move-line">
                 <a href="javascript:void(0)"
                 class="open-price-modal price-popup-link"
@@ -170,13 +163,20 @@
                     data-product-id="{{ $product->id }}"
                     {{ $product->is_new_arrivals ? 'checked' : '' }}>
                 <br>
-
-                Is Active
+                Is Featured
                 <input type="checkbox"
                     class="toggle-checkbox"
-                    data-field="is_active"
+                    data-field="is_featured"
                     data-product-id="{{ $product->id }}"
-                    {{ $product->is_active ? 'checked' : '' }}>
+                    {{ $product->is_featured ? 'checked' : '' }}>
+                <br>
+                Is Featured
+                <input type="checkbox"
+                    class="toggle-checkbox"
+                    data-field="trending"
+                    data-product-id="{{ $product->id }}"
+                    {{ $product->trending ? 'checked' : '' }}>    
+               
             </td>
             <?php 
             $checked = 'checked';
@@ -194,11 +194,26 @@
                     <span class="slider round"></span>
                 </label>
             </td>
-            <td class="move-line publish-status 
-                {{ $product->is_active ? '' : 'text-danger' }}"
-                id="publish-{{ $product->id }}">
-                
-                {{ $product->is_active ? 'Published' : 'Unpublished' }}
+            <td class="move-line publish-status">
+                @php   
+                    $status = "" ; 
+                    if($product->is_active == "1"){
+                        $status = "Published"; 
+                    }
+                    if($product->is_active == "0"){
+                        $status = "Unpublished"; 
+                    }
+                    if($product->is_active == "2"){
+                        $status = "Draft"; 
+                    }
+                @endphp 
+                @if($status == "Published")
+                    <span class="text-success">{{ $status}}</span>
+                @elseif($status == "Unpublished")   
+                    <span class="text-danger">{{ $status }}</span>
+                @else
+                    <span class="text-warning">{{ $status }}</span>
+                @endif      
             </td>
             <td class="move-line">
                 <div class="input-group qty-group" data-product-id="{{ $product->id }}">
@@ -262,7 +277,6 @@
             <div class="modal-body" id="priceModalBody">
                 <div class="text-center">Loading...</div>
             </div>
-
         </div>
     </div>
 </div>
@@ -308,18 +322,35 @@
             },
             success: function (response) {
 
+                // if (field === 'is_active') {
+
+                //     let publishEl = $('#publish-' + productId);
+
+                //     if (value === 1) {
+                //         publishEl
+                //             .text('Published')
+                //             .removeClass('text-danger');
+                //     } else {
+                //         publishEl
+                //             .text('Unpublished')
+                //             .addClass('text-danger');
+                //     }
+                // }
                 if (field === 'is_active') {
 
-                    let publishEl = $('#publish-' + productId);
+                    let publishEl = $('#publish_' + productId);
+                    let unPublishEl = $('#unPublish_' + productId);
+                    let draftEl = $('#draf_' + productId);
 
-                    if (value === 1) {
-                        publishEl
-                            .text('Published')
-                            .removeClass('text-danger');
+                    publishEl.removeClass('text-success');
+                    unPublishEl.removeClass('text-success');
+                    draftEl.removeClass('text-success');
+
+                    if (value == 1) {
+                        publishEl.addClass('text-success');
+
                     } else {
-                        publishEl
-                            .text('Unpublished')
-                            .addClass('text-danger');
+                        unPublishEl.addClass('text-success');
                     }
                 }
 
@@ -334,31 +365,85 @@
                 alert('Something went wrong!');
             }
         });
-    });
-    
-    
+    });    
 </script>
 
 <script>
+
     $(document).on('click', '.open-price-modal', function () {
         let productId = $(this).data('product-id');
-
         let modalEl = document.getElementById('priceModal');
-        let modal = new bootstrap.Modal(modalEl);
-        modal.show();
+        let modal = bootstrap.Modal.getOrCreateInstance(modalEl);
 
+        destroyModalEditors();
         $('#priceModalBody').html('Loading...');
-
+        modal.show();
         $.ajax({
+
             url: "{{ url('product/prices') }}/" + productId,
+
             type: "GET",
+
             success: function (response) {
+
+                destroyModalEditors();
+
+                $('#priceModalBody').empty();
                 $('#priceModalBody').html(response);
+                setTimeout(function () {
+                    loadCkeditorScript(function () {
+                        initVariantSpecializationEditors(
+                            document.getElementById('priceModalBody')
+                        );
+                    });
+
+                }, 100);
             },
+
             error: function () {
-                $('#priceModalBody').html('Error loading data');
+
+                $('#priceModalBody').html(
+                    '<div class="alert alert-danger">Error loading data</div>'
+                );
             }
         });
+
+    });
+    function destroyModalEditors() {
+
+        if (typeof CKEDITOR === 'undefined') {
+            return;
+        }
+
+        const modalBody = document.getElementById('priceModalBody');
+
+        if (!modalBody) {
+            return;
+        }
+
+        Object.keys(CKEDITOR.instances).forEach(function (instanceId) {
+            const editor = CKEDITOR.instances[instanceId];
+            if (!editor) {
+                return;
+            }
+            try {
+
+                const element = editor.element;
+                if (element &&element.$ &&modalBody.contains(element.$)) {
+                    console.log('Destroying CKEditor:', instanceId);
+                    editor.destroy(true);
+                }
+            } catch (error) {
+                console.error('Error destroying CKEditor:',instanceId,error);
+            }
+        });
+    }
+
+    $('#priceModal').on('hidden.bs.modal', function () {
+        console.log('Modal closed - destroying editors');
+        destroyModalEditors();
+        $('#priceModalBody').empty();
+
     });
 </script>
 

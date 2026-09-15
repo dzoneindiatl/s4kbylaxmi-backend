@@ -528,7 +528,9 @@ function previewImages(event, variantId) {
     Array.from(files).forEach((file, index) => {
         const reader = new FileReader();
         reader.onload = function (e) {
+            const imageId = generateImageId();
             window.uploadedImages[variantId].push({
+                imageId: imageId,
                 url: e.target.result,
                 file: file,
                 front: false,
@@ -541,7 +543,6 @@ function previewImages(event, variantId) {
     });
 }
 
-/* 🧱 RENDER IMAGES IN MODAL & OUTSIDE */
 function renderPreviews(variantId) {
     const container = document.getElementById('preview_images_' + variantId);
     const groupRow = document.querySelector(`.variant_group_row input[name="main_variant"][value="${variantId}"]`)?.closest('.variant_group_row');
@@ -558,7 +559,6 @@ function renderPreviews(variantId) {
     });
 }
 
-/* 📦 BUILD IMAGE PREVIEW BOX */
 function createImagePreviewBox(imageData, variantId, index, showControls = false) {
     const wrapper = document.createElement('div');
     wrapper.className = 'image-preview-container position-relative';
@@ -572,30 +572,37 @@ function createImagePreviewBox(imageData, variantId, index, showControls = false
     img.style.width = '100px';
     img.style.height = '100px';
     img.style.objectFit = 'cover';
+    img.setAttribute('data-id', imageData.imageId);
 
-    // ❌ Remove Button
+   if (showControls) {
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = `image_id[${variantId}][]`;
+        hiddenInput.value = imageData.imageId;
+        wrapper.appendChild(hiddenInput);
+    }
+
     const removeBtn = document.createElement('button');
     removeBtn.innerHTML = '&times;';
     removeBtn.className = 'btn btn-sm btn-danger position-absolute top-0 end-0';
-    removeBtn.onclick = () => {
-        window.uploadedImages[variantId].splice(index, 1);
+    removeBtn.onclick = function () {
+        window.uploadedImages[variantId] = window.uploadedImages[variantId].filter(image => image.imageId !== imageData.imageId);
         renderPreviews(variantId);
     };
 
     wrapper.appendChild(img);
     wrapper.appendChild(removeBtn);
 
-    // 🔘 FRONT / BACK radio buttons (only in modal)
     if (showControls) {
         const frontSwitch = document.createElement('div');
         frontSwitch.className = 'form-check form-switch d-flex align-items-center justify-content-center mb-1 px-0';
         frontSwitch.innerHTML = `
             <input class="form-check-input" type="radio" name="front_image[${variantId}]" 
-                value="${variantId}-${index}" 
+                value="${imageData.imageId}" 
                 ${imageData.front ? 'checked' : ''} 
-                onchange="setFrontImage(${variantId}, ${index})" 
-                id="frontSwitch_${variantId}_${index}">
-            <label class="form-check-label small ms-2" for="frontSwitch_${variantId}_${index}">
+                onchange="setFrontImage(${variantId}, '${imageData.imageId}')" 
+                id="frontSwitch_${variantId}_${imageData.imageId}">
+            <label class="form-check-label small ms-2" for="frontSwitch_${variantId}_${imageData.imageId}">
                 Front Image
             </label>`;
 
@@ -603,11 +610,11 @@ function createImagePreviewBox(imageData, variantId, index, showControls = false
         backSwitch.className = 'form-check form-switch d-flex align-items-center justify-content-center px-0';
         backSwitch.innerHTML = `
            <input class="form-check-input" type="radio" name="back_image[${variantId}]" 
-                value="${variantId}-${index}" 
+                value="${imageData.imageId}" 
                 ${imageData.back ? 'checked' : ''} 
-                onchange="setBackImage(${variantId}, ${index})" 
-                id="backSwitch_${variantId}_${index}">
-            <label class="form-check-label small ms-2" for="backSwitch_${variantId}_${index}">
+                onchange="setBackImage(${variantId}, '${imageData.imageId}')" 
+                id="backSwitch_${variantId}_${imageData.imageId}">
+            <label class="form-check-label small ms-2" for="backSwitch_${variantId}_${imageData.imageId}">
                 Back Image
             </label>`;
         
@@ -615,11 +622,11 @@ function createImagePreviewBox(imageData, variantId, index, showControls = false
         variantIconSwitch.className = 'form-check form-switch d-flex align-items-center justify-content-center px-0';
         variantIconSwitch.innerHTML = `
            <input class="form-check-input" type="radio" name="variant_icon[${variantId}]" 
-                value="${variantId}-${index}" 
+                value="${imageData.imageId}"
                 ${imageData.icon ? 'checked' : ''} 
-                onchange="setVariantIcon(${variantId}, ${index})" 
-                id="iconSwitch_${variantId}_${index}">
-            <label class="form-check-label small ms-2" for="iconSwitch_${variantId}_${index}">
+                onchange="setVariantIcon(${variantId}, '${imageData.imageId}')" 
+                id="iconSwitch_${variantId}_${imageData.imageId}">
+            <label class="form-check-label small ms-2" for="iconSwitch_${variantId}_${imageData.imageId}">
                 Variant Icon
             </label>`;
 
@@ -631,23 +638,47 @@ function createImagePreviewBox(imageData, variantId, index, showControls = false
     return wrapper;
 }
 
-/* 🏷️ SET FRONT IMAGE FLAG */
-function setFrontImage(variantId, index) {
-    window.uploadedImages[variantId].forEach((img, i) => img.front = i === index);
+function setFrontImage(variantId, imageId) {
+
+    console.log('SET FRONT', {
+        variantId: variantId,
+        imageId: imageId
+    });
+    window.uploadedImages[variantId].forEach((image) => {
+        image.front = image.imageId === imageId;
+    });
     renderPreviews(variantId);
 }
 
-/* 🏷️ SET BACK IMAGE FLAG */
-function setBackImage(variantId, index) {
-    window.uploadedImages[variantId].forEach((img, i) => img.back = i === index);
+function setBackImage(variantId, imageId) {
+    console.log('SET BACK', {
+        variantId: variantId,
+        imageId: imageId
+    });
+    window.uploadedImages[variantId].forEach((image) => {
+        image.back = image.imageId === imageId;
+    });
     renderPreviews(variantId);
 }
 
-/* 🏷️ SET variant icon IMAGE FLAG */
-function setVariantIcon(variantId, index) {
-    window.uploadedImages[variantId].forEach((img, i) => img.icon = i === index);
+function setVariantIcon(variantId, imageId) {
+     console.log('SET ICON', {
+        variantId: variantId,
+        imageId: imageId
+    });
+     window.uploadedImages[variantId].forEach((image) => {
+        image.icon = image.imageId === imageId;
+    });
     renderPreviews(variantId);
 }
+
+function generateImageId() {
+    return 'img_' +
+        Date.now() +
+        '_' +
+        Math.random().toString(36).substring(2, 15);
+}
+
 
 // ===================== Video Preview =====================
 function previewVideo(event, variantId) {

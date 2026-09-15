@@ -5,7 +5,7 @@ $FRONT_WEBSITE_URL = env('WEBSITE_URL');
 // $BASE_PATH =  'C:/xampp/htdocs/vasvi/public/';
 $BASE_PATH = '/home/furnishworldecom/public_html/public/';
 if(!empty($_SERVER['SERVER_NAME']) && ($_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['SERVER_NAME'] == '127.0.0.1')){
-	$BASE_PATH =  'C:/xampp/htdocs/furnishworld-frontend/public/';
+	$BASE_PATH =  'C:/xampp/htdocs/s4kbylaxmi-frontend/public/';
 }
 
 
@@ -31,6 +31,7 @@ return [
 	'STAFF_IMAGE_PATH'                       => $FRONT_WEBSITE_URL . 'public/uploads/staffs/',
 	'STAFF_IMAGE_ROOT_PATH'                       => $BASE_PATH . 'uploads/staffs/',
 	'STAFF_IMAGE_URL'                       => $FRONT_WEBSITE_URL . 'uploads/staffs/',
+	
 	'CATEGORY_IMAGE_PATH'                       => $FRONT_WEBSITE_URL . 'public/uploads/categories/',
 	'CATEGORY_IMAGE_ROOT_PATH'                  => $BASE_PATH . 'uploads/categories/',
 	'CATEGORY_IMAGE_URL'                       => $FRONT_WEBSITE_URL . 'uploads/categories/',
@@ -38,6 +39,10 @@ return [
 	'CATEGORY_VIDEO_PATH'                       => $FRONT_WEBSITE_URL . 'uploads/categories-video/',
 	'CATEGORY_VIDEO_ROOT_PATH'                       => $BASE_PATH . 'uploads/categories/',
 	'CATEGORY_VIDEO_URL'                       => $FRONT_WEBSITE_URL . '/public/uploads/categories-video/',
+
+	'COLLECTION_IMAGE_PATH'						=> $FRONT_WEBSITE_URL . 'public/uploads/collections/',
+	'COLLECTION_IMAGE_ROOT_PATH'				=>	$BASE_PATH . 'uploads/collections/',
+	'COLLECTION_IMAGE_URL'						=>	$FRONT_WEBSITE_URL . 'uploads/collections/',
 
 	'BANNER_IMAGE_PATH'                       => $FRONT_WEBSITE_URL . 'uploads/banners/',
 	'BANNER_IMAGE_ROOT_PATH'                       => $BASE_PATH . 'uploads/banners/',

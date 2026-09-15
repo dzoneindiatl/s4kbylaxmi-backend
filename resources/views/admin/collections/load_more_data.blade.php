@@ -8,7 +8,6 @@
     </td>
 
     <td>{{ $result->title ?? "N/A" }}</td>
-    <td>{{ $result->total_product ?? 0 }} </td>
     <td>{{ date('Y-m-d',strtotime($result->created_at)) }}</td>
     <td>
         <div class="hstack gap-2 flex-wrap">

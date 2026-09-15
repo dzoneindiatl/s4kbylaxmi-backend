@@ -159,8 +159,8 @@
                                 name="image" accept="image/*">
                             @if (!empty($category->getAttributes()['image']))
                                 <div class="category-image-wrapper" data-id="{{ $category->id }}">
-                                    <a href="{{ env('WEBSITE_URL') . '/uploads/category/' . $category->getAttributes()['image'] }}" target="_blank">
-                                        <img src="{{  env('WEBSITE_URL')  .'/uploads/category/' . $category->getAttributes()['image'] }}"
+                                    <a href="{{ env('WEBSITE_URL') . '/uploads/categories/' . $category->getAttributes()['image'] }}" target="_blank">
+                                        <img src="{{  env('WEBSITE_URL')  .'/uploads/categories/' . $category->getAttributes()['image'] }}"
                                             width="100" height="100" alt="Category Image">
                                     </a>
 

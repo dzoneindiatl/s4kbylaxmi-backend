@@ -28,7 +28,7 @@ class ProductTabService
         $product->main_category_id     = $data['main_category_id'];
         $product->main_sub_category_id = $data['main_sub_category_id'] ?? null;
         $product->main_child_category_id  = $data['main_child_cate_id'] ?? null;
-        $product->collection_ids          = $data['product_collection_id'] ?? null; 
+        $product->main_collection_id         = $data['product_collection_id'] ?? null; 
 
         $product->save();
         $productId = $product->id ;  
@@ -253,37 +253,8 @@ class ProductTabService
             }
             $this->handleAttributes($product, $data);
             $this->handleGraphics($product, $data);
-            $this->handleProductSpecification($product, $data); 
             return $product;
         });
-    }
-
-    protected function handleProductSpecification(Product $product, array $data){
-
-        foreach ($data['variant_id'] ?? [] as $value) {
-            $variantId = VariantValue::where('id', $value)->value('variant_id');
-            $contentKey = 'content_' . $value;
-            $contentValue = $data['content_specification_' . $value] ?? '';
-
-            $exist = ProductVariantSpecialization::where('product_id', $product->id)
-                ->where('variant_id', $variantId)
-                ->where('variant_value_id', $value)
-                ->first();
-
-            if ($exist) {
-                $exist->update([
-                    $contentKey => $contentValue,
-                ]);
-
-            } else {
-                ProductVariantSpecialization::create([
-                    'product_id'       => $product->id,
-                    'variant_id'       => $variantId,
-                    'variant_value_id' => $value,
-                    $contentKey        => $contentValue,
-                ]);
-            }
-        }
     }
 
     protected function handleWithoutVariants(Product $product, array $data)
@@ -393,9 +364,6 @@ class ProductTabService
             ->whereNotIn('combination_id', $submittedCombinations)
             ->update(['status' => "0"]);
     }
-
-
-
     protected function handleAttributes(Product $product, array $data)
     {
         ProductAttribute::where('product_id', $product->id)->delete();
@@ -415,122 +383,184 @@ class ProductTabService
     }
 
     protected function handleGraphics(Product $product, array $data)
-    {
-        $folder_path = strtoupper(date('M') . date('Y')) . "/";
+    {   
+        $folder_path = strtoupper(date('M') . date('Y')) . "/"; 
         $imagePath = config('constant.PRODUCT_IMAGE_ROOT_PATH').$folder_path;
 
-        foreach ($data['variant_images'] ?? [] as $primaryId => $files) {
-            info("------primary_id-------",[$primaryId]); 
-            ProductGraphics::where('variant_id', $primaryId)
-                ->where('product_id', $product->id)
+        foreach ($data['existing_front_image'] ?? [] as $variantId => $existingFrontId) {
+
+            if (!$existingFrontId) {
+                continue;
+            }
+            ProductGraphics::where('product_id', $product->id)
+                ->where('variant_id', $variantId)
+                ->where('graphic_type', 'image')
                 ->update([
-                    'is_front'        => 0,
-                    'is_back'         => 0,
+                    'is_front' => 0
+                ]);
+
+            ProductGraphics::where('id', $existingFrontId)
+                ->where('product_id', $product->id)
+                ->where('variant_id', $variantId)
+                ->where('graphic_type', 'image')
+                ->update([
+                    'is_front' => 1
+                ]);
+        }
+
+        foreach ($data['existing_back_image'] ?? [] as $variantId => $existingBackId) {
+
+            if (!$existingBackId) {
+                continue;
+            }
+            ProductGraphics::where('product_id', $product->id)
+                ->where('variant_id', $variantId)
+                ->where('graphic_type', 'image')
+                ->update([
+                    'is_back' => 0
+                ]);
+            ProductGraphics::where('id', $existingBackId)
+                ->where('product_id', $product->id)
+                ->where('variant_id', $variantId)
+                ->where('graphic_type', 'image')
+                ->update([
+                    'is_back' => 1
+                ]);
+        }
+
+        foreach ($data['existing_variant_icon'] ?? [] as $variantId => $existingIconId) {
+
+            if (!$existingIconId) {
+                continue;
+            }
+            ProductGraphics::where('product_id', $product->id)
+                ->where('variant_id', $variantId)
+                ->where('graphic_type', 'image')
+                ->update([
                     'is_variant_icon' => 0
                 ]);
 
-            foreach ($files as $index => $file) {
+            ProductGraphics::where('id', $existingIconId)
+                ->where('product_id', $product->id)
+                ->where('variant_id', $variantId)
+                ->where('graphic_type', 'image')
+                ->update([
+                    'is_variant_icon' => 1
+                ]);
+        }
+        
+        foreach ($data['variant_images'] ?? [] as $primaryId => $files) {
 
+            $frontImageId =$data['front_image'][$primaryId] ?? null;
+            $backImageId =$data['back_image'][$primaryId] ?? null;
+            $iconImageId =$data['variant_icon'][$primaryId] ?? null;
+
+            $imageIds =$data['image_id'][$primaryId] ?? [];
+
+            if ($frontImageId) {
+                ProductGraphics::where('product_id', $product->id)
+                    ->where('variant_id', $primaryId)
+                    ->where('graphic_type', 'image')
+                    ->update([
+                        'is_front' => 0
+                    ]);
+            }
+
+            if ($backImageId) {
+                ProductGraphics::where('product_id', $product->id)
+                    ->where('variant_id', $primaryId)
+                    ->where('graphic_type', 'image')
+                    ->update([
+                        'is_back' => 0
+                    ]);
+            }
+
+            if ($iconImageId) {
+                ProductGraphics::where('product_id', $product->id)
+                    ->where('variant_id', $primaryId)
+                    ->where('graphic_type', 'image')
+                    ->update([
+                        'is_variant_icon' => 0
+                    ]);
+            }
+
+            if (!file_exists($imagePath)) {
+                    mkdir($imagePath, 0755, true);
+            }
+            
+            foreach ($files as $index  => $file) {
                 if (!$file || !$file->isValid()) {
                     continue;
                 }
-
-                $name = uniqid("variant_{$primaryId}_") . '.webp';
-
-                if (!file_exists($imagePath)) {
-                    mkdir($imagePath, 0755, true);
+                $imageId = $imageIds[$index] ?? null;
+                if (!$imageId) {
+                    continue;
                 }
-
+             
+                $originalName = pathinfo($file->getClientOriginalName(),PATHINFO_FILENAME);
+                $name = $originalName . '_' . $primaryId . '_' . $imageId . '.webp';
+                $sourceImage = null;
                 $sourcePath = $file->getPathname();
                 $extension = strtolower($file->getClientOriginalExtension());
-
+                
+                
                 switch ($extension) {
 
-                    case 'jpg':
-                    case 'jpeg':
-                        $sourceImage = imagecreatefromjpeg($sourcePath);
-                        break;
+                        case 'jpg':
+                        case 'jpeg':
+                            $sourceImage = imagecreatefromjpeg($sourcePath);
+                            break;
 
-                    case 'png':
-                        $sourceImage = imagecreatefrompng($sourcePath);
+                        case 'png':
+                            $sourceImage = imagecreatefrompng($sourcePath);
 
-                        // Preserve transparency
-                        imagepalettetotruecolor($sourceImage);
-                        imagealphablending($sourceImage, false);
-                        imagesavealpha($sourceImage, true);
-                        break;
+                            // Preserve transparency
+                            imagepalettetotruecolor($sourceImage);
+                            imagealphablending($sourceImage, false);
+                            imagesavealpha($sourceImage, true);
+                            break;
 
-                    case 'gif':
-                        $sourceImage = imagecreatefromgif($sourcePath);
+                        case 'gif':
+                            $sourceImage = imagecreatefromgif($sourcePath);
 
-                        // Preserve transparency
-                        imagepalettetotruecolor($sourceImage);
-                        imagealphablending($sourceImage, false);
-                        imagesavealpha($sourceImage, true);
-                        break;
+                            // Preserve transparency
+                            imagepalettetotruecolor($sourceImage);
+                            imagealphablending($sourceImage, false);
+                            imagesavealpha($sourceImage, true);
+                            break;
 
-                    case 'webp':
-                        $sourceImage = imagecreatefromwebp($sourcePath);
-                        break;
+                        case 'webp':
+                            $sourceImage = imagecreatefromwebp($sourcePath);
+                            break;
 
-                    default:
-                        continue 2;
+                        default:
+                            continue 2;
                 }
 
                 if (!$sourceImage) {
                     continue;
                 }
 
-                // Convert and save as WebP
-                imagewebp(
-                    $sourceImage,
-                    $imagePath . DIRECTORY_SEPARATOR . $name,
-                    85
-                );
-
-                // Free memory
+                $fullImagePath = $imagePath . DIRECTORY_SEPARATOR . $name;
+                imagewebp($sourceImage,$fullImagePath,85);
                 imagedestroy($sourceImage);
+                $isFront =((string) $imageId === (string) $frontImageId)? 1 : 0;
+                $isBack = ((string) $imageId === (string) $backImageId) ? 1 : 0;
+                $isVariantIcon =((string) $imageId === (string) $iconImageId)? 1 : 0;
                 ProductGraphics::create([
-                    'product_id'       => $product->id,
-                    'variant_id'       => $primaryId,
-                    'product_type'     => 'variant_group',
-                    'graphic_type'     => 'image',
-                    'graphic'          => $folder_path . $name,
-                    'status'           => 1,
-
-                    'is_front' => isset($data['front_image'][$primaryId])
-                        && $data['front_image'][$primaryId] == "{$primaryId}-{$index}"
-                        ? 1 : 0,
-
-                    'is_back' => isset($data['back_image'][$primaryId])
-                        && $data['back_image'][$primaryId] == "{$primaryId}-{$index}"
-                        ? 1 : 0,
-
-                    'is_variant_icon' => isset($data['variant_icon'][$primaryId])
-                        && $data['variant_icon'][$primaryId] == "{$primaryId}-{$index}"
-                        ? 1 : 0,
+                        'product_id'       => $product->id,
+                        'variant_id'       => $primaryId,
+                        'image_id'         =>$imageId,
+                        'product_type'     => 'variant_group',
+                        'graphic_type'     => 'image',
+                        'graphic'          => $folder_path . $name,
+                        'status'           => 1,
+                        'is_front'         => $isFront,
+                        'is_back'          => $isBack,
+                        'is_variant_icon'  => $isVariantIcon,
                 ]);
             }
         }
-
-        /* foreach ($data['variant_video'] ?? [] as $primaryId => $file) {
-            if ($file->isValid()) {
-                $name = uniqid('variant_video_' . $primaryId . '_') . '.' . $file->getClientOriginalExtension();
-                $file->move($imagePath, $name);
-
-                ProductGraphics::create([
-                    'product_id' => $product->id,
-                    'variant_id' => $primaryId,
-                    'product_type' => 'variant_group',
-                    'graphic_type' => 'video',
-                    'graphic' => $name,
-                    'status' => 1,
-                    'is_front' => 0,
-                    'is_back' => 0,
-                    'is_variant_icon' => 0,
-                ]);
-            }
-        } */
 
         foreach ($data['variant_video'] ?? [] as $primaryId => $file) {
             if ($file->isValid()) {
@@ -555,7 +585,6 @@ class ProductTabService
                 ]);
             }
         }
-
     }
 
     // public function updateFrontBackVariantImage($variantId, $imgId, $type = 'front'){
@@ -586,33 +615,40 @@ class ProductTabService
         if (!$image) {
             return false;
         }
+        
+        $query = ProductGraphics::where('variant_id', $variantId)
+        ->where('product_id', $productid);
 
         if ($type === 'front') {
-            $alreadyExistIMgWithSameType = ProductGraphics::where('variant_id', $variantId)->where('product_id', $productid)->get();
-            if($alreadyExistIMgWithSameType){
-                ProductGraphics::where('variant_id', $variantId)->where('product_id', $productid)->update(['is_front' => 0]);
-            }
-            ProductGraphics::where('id', $imgId)->update(['is_front' => 1]);
+             $query->update([
+                'is_front' => 0
+            ]);
+
+            $image->update([
+                'is_front' => 1
+            ]);
     
         }
         elseif ($type === 'back') {
-            $alreadyExistIMgWithSameType = ProductGraphics::where('variant_id', $variantId)->where('product_id', $productid)->get();
-            if($alreadyExistIMgWithSameType){
-                ProductGraphics::where('variant_id', $variantId)->where('product_id', $productid)->update(['is_back' => 0]);
-            }
+            $query->update([
+                'is_back' => 0
+            ]);
 
-            ProductGraphics::where('id', $imgId)->update(['is_back' => 1]);
+            $image->update([
+                'is_back' => 1
+            ]);
     
         }
         elseif ($type === 'icon') {
-            $alreadyExistIMgWithSameType = ProductGraphics::where('variant_id', $variantId)->where('product_id', $productid)->get();
-            if($alreadyExistIMgWithSameType){
-                ProductGraphics::where('variant_id', $variantId)->where('product_id', $productid)->update(['is_variant_icon' => 0]);
-            }
+            $query->update([
+                'is_variant_icon' => 0
+            ]);
 
-            ProductGraphics::where('id', $imgId)->update(['is_variant_icon' => 1]);
-    
-        } else {
+            $image->update([
+                'is_variant_icon' => 1
+            ]);
+        } 
+        else {
             return false;
         }
     

@@ -20,7 +20,7 @@
             </div>
             <div class="mb-3">
                 <label for="" class="form-label">Product Collection</label>
-                <select name="product_collection_id" class="form-control select2" id="product_collection_id" >
+                <select name="product_collection_id" class="form-control select2" id="product_collection_id">
                     <option value="">Select Collection</option>
                     @foreach($productCollection as $collections)
                         <option value="{{ $collections->id }}" {{ old('product_collection_id',$product->collection_ids ?? '') == $collections->id ? 'selected' : '' }} >{{ $collections->title }}</option>
@@ -260,6 +260,7 @@
         formData.append('main_category_id', $('#prdct_category_id').val());
         formData.append('main_sub_category_id', $('#prdct_sub_category_id').val());
         formData.append('main_child_cate_id', $('#prdct_child_category_id').val());
+        formData.append('product_collection_id',$('#product_collection_id').val()); 
         var variantSelected = false;
         $('.variant-card').each((i, el) => {
             const variantId = $(el).find('.variantSelect').val();

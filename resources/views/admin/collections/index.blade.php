@@ -105,7 +105,6 @@
                     <tr id="tableHeaders">
                         <th >Image </th>
                         <th class="sortable" data-column="title">Title <i class="sort-icon ri-sort-asc"></i></th>
-                        <th data-column="title">Product</th>
                         <th class="sortable" data-column="created_at">Created At <i class="sort-icon ri-sort-asc"></i>
                         <th>Action </th>
                     </tr>
