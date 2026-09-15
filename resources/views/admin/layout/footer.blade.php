@@ -8,5 +8,5 @@
         reserved
     </span> -->
     <!-- <span class="text-dark fw-semibold">{{Config("Site.copyright")}}</span> -->
-    <span class="text-dark fw-semibold">©2026 Furnish World. All Rights Reserved. Powered BY : <a href="https://dzoneindia.co.in/" target="_blank" style="text-decoration:underline">Dzone India</a></span>
+    <span class="text-dark fw-semibold">©2026 S4kByLaxmi. All Rights Reserved. Powered BY : <a href="https://dzoneindia.co.in/" target="_blank" style="text-decoration:underline">Dzone India</a></span>
 </div>

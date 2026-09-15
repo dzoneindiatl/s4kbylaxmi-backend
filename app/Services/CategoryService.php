@@ -61,14 +61,7 @@ class CategoryService
                 $data['show_on_home'] = $category->show_on_home; 
                 $data['is_featured'] = $category->is_featured; 
             }    
-            $slug = Str::slug(Str::lower($data['name']));
-            $originalSlug = $slug;
-            $count = 2;
-            while (Category::where('slug', $slug)->when($id, fn($q) => $q->where('id', '!=', $id))->exists()){
-                $slug = $originalSlug . '-' . $count;
-                $count++;
-            }
-            
+            $slug = Str::slug(Str::lower($data['name']));  
             $category->fill([
                 'name'              => $data['name'],
                 'slug'              => $slug,

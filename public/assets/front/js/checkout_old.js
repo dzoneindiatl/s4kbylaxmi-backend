@@ -1,0 +1,612 @@
+
+/* Billing Address country */
+
+$('#country').on('change', function () {
+    var countryId = $(this).val();
+    var selectedStateId = null; // or set this dynamically
+
+    if (countryId) {
+        $.ajax({
+            url: '/get-states/' + countryId,
+            type: 'GET',
+            success: function (response) {
+                var options = '<option value="">Select State</option>';
+                $.each(response, function (id, name) {
+                    var selected = (id == selectedStateId) ? 'selected' : '';
+                    options += '<option value="' + id + '" ' + selected + '>' + name + '</option>';
+                });
+                $('#state').html(options);
+            }
+        });
+    } else {
+        $('#state').html('<option value="">Select State</option>');
+    }
+});
+
+$('#state').on('change', function () {
+    var stateId = $(this).val();
+    var selectedCityId = null; // or set this dynamically
+
+    if (stateId) {
+        $.ajax({
+            url: '/get-cities/' + stateId,
+            type: 'GET',
+            success: function (response) {
+                // console.log(response);
+                var options = '<option value="">Select City</option>';
+                $.each(response, function (id, name) {
+                    var selected = (id == selectedCityId) ? 'selected' : '';
+                    options += '<option value="' + id + '" ' + selected + '>' + name + '</option>';
+                });
+                $('#city').html(options);
+            }
+        });
+    } else {
+        $('#city').html('<option value="">Select City</option>');
+    }
+});
+
+/* Shipping Addrress country */
+
+$('#shipping_country').on('change', function () {
+    var countryId = $(this).val();
+    var selectedStateId = null; // or set this dynamically
+
+    if (countryId) {
+        $.ajax({
+            url: '/get-states/' + countryId,
+            type: 'GET',
+            success: function (response) {
+                var options = '<option value="">Select State</option>';
+                $.each(response, function (id, name) {
+                    var selected = (id == selectedStateId) ? 'selected' : '';
+                    options += '<option value="' + id + '" ' + selected + '>' + name + '</option>';
+                });
+                $('#shipping_state').html(options);
+            }
+        });
+    } else {
+        $('#shipping_state').html('<option value="">Select State</option>');
+    }
+});
+
+$('#shipping_state').on('change', function () {
+    var stateId = $(this).val();
+    var selectedCityId = null; // or set this dynamically
+
+    if (stateId) {
+        $.ajax({
+            url: '/get-cities/' + stateId,
+            type: 'GET',
+            success: function (response) {
+                // console.log(response);
+                var options = '<option value="">Select City</option>';
+                $.each(response, function (id, name) {
+                    var selected = (id == selectedCityId) ? 'selected' : '';
+                    options += '<option value="' + id + '" ' + selected + '>' + name + '</option>';
+                });
+                $('#shipping_city').html(options);
+            }
+        });
+    } else {
+        $('#shipping_city').html('<option value="">Select City</option>');
+    }
+});
+
+// Billing Address validation
+document.addEventListener('DOMContentLoaded', function () {
+    const billingForm = document.getElementById('addressForm');
+    const shippingForm = document.getElementById('shippingAddressForm');
+
+    function handleValidation(form, submitButton, redirectUrl) {
+        if (form && submitButton) {
+            submitButton.addEventListener('click', function (e) {
+                e.preventDefault();
+                let isValid = true;
+
+                // Clear previous errors
+                form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+                form.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
+
+                const showError = (input, message) => {
+                    input.classList.add('is-invalid');
+                    const error = document.createElement('div');
+                    error.className = 'invalid-feedback';
+                    error.style.color = 'red';
+                    error.innerText = message;
+                    input.parentNode.appendChild(error);
+                    isValid = false;
+                };
+
+                // Scoped form fields
+                const country = form.querySelector('[name="country"]');
+                const firstName = form.querySelector('[name="firstname"]');
+                const lastName = form.querySelector('[name="lastname"]');
+                const address = form.querySelector('[name="address"]');
+                const city = form.querySelector('[name="city"]');
+                const state = form.querySelector('[name="state"]');
+                const pinCode = form.querySelector('[name="pinCode"]');
+                const phone = form.querySelector('[name="phone"]');
+
+                // Validations
+                if (!country || !country.value || country.value === 'Country/Region') {
+                    showError(country, 'Please select a country');
+                }
+                if (!firstName || !firstName.value.trim()) {
+                    showError(firstName, 'First name is required');
+                }
+                if (!lastName || !lastName.value.trim()) {
+                    showError(lastName, 'Last name is required');
+                }
+                if (!address || !address.value.trim()) {
+                    showError(address, 'Address is required');
+                }
+                if (!city || !city.value || city.value === 'City') {
+                    showError(city, 'Please select a city');
+                }
+                if (!state || !state.value || state.value === 'State') {
+                    showError(state, 'Please select a state');
+                }
+                if (!pinCode || !pinCode.value.trim()) {
+                    showError(pinCode, 'PIN code is required');
+                } else if (!/^\d{6}$/.test(pinCode.value.trim())) {
+                    showError(pinCode, 'PIN code must be 6 digits');
+                }
+                if (!phone || !phone.value.trim()) {
+                    showError(phone, 'Phone number is required');
+                } else if (!/^\d{10}$/.test(phone.value.trim())) {
+                    showError(phone, 'Phone number must be 10 digits');
+                }
+
+                if (isValid) {
+                    const formData = new FormData(form);
+
+                    fetch('/save-user-address', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert(data.message);
+                                window.location.href = data.redirect_url;
+                            } else {
+                                alert('Something went wrong. Please check your input.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('AJAX Error:', error);
+                            alert('Something went wrong. Please try again later.');
+                        });
+                }
+            });
+        }
+    }
+
+    // Attach validation to both forms
+    handleValidation(billingForm, document.getElementById('save_billing_address'));
+    handleValidation(shippingForm, document.getElementById('save_shipping_address'));
+});
+
+// Biling Addrress for close/open
+$(document).ready(function () {
+    $('#add_new_billing_address').on('click', function () {
+        $('#main_billing').slideToggle();
+    });
+});
+
+// Shipping Addrress for close/open
+$(document).ready(function () {
+    $('#add_new_shipping_address').on('click', function () {
+        $('#main_shipping').slideToggle();
+    });
+});
+
+/*Same as billing address*/
+
+function toggleShippingAddressForm() {
+    const checkbox = document.getElementById('same_as_billing');
+    const shippingAddressForm = document.getElementById('add_new_shipping_address');
+
+    if (checkbox.checked) {
+        shippingAddressForm.style.display = 'none'; // Hide the form
+    } else {
+        shippingAddressForm.style.display = 'block'; // Show the form
+    }
+}
+
+// Initial state based on checkbox status
+document.addEventListener('DOMContentLoaded', function () {
+    toggleShippingAddressForm();
+});
+
+/*End Same as billing address*/
+
+/* for payment process */
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+
+$('#pay_now').on('click', function (e) {
+    let that = $(this);
+    let isValid = true;
+    let isSameAsBillingChecked = $('#same_as_billing').is(':checked');
+    let selectedShipping = $('.select_shipping_address:checked').val();
+    if (!isSameAsBillingChecked && !selectedShipping) {
+        isValid = false;
+        let el = $('#same_as_billing');
+        if (el.parent().find('.error-msg').length === 0) {
+            el.parent().append('<span class="error-msg" style="color: red;">Please select at least one address.</span>');
+        }
+    } else {
+        $('#same_as_billing').parent().find('.error-msg').remove();
+    }
+
+
+    let selectedBilling = $('.select_billing_address:checked').val();
+    if (!selectedBilling) {
+        isValid = false;
+        if ($('#message_for_billing_address').find('.error-msg').length === 0) {
+            $('#message_for_billing_address').append('<span class="error-msg" style="color: red;">Please select at least one address.</span>');
+        }
+    } else {
+        $('#message_for_billing_address').find('.error-msg').remove();
+    }
+
+    if (!isValid) {
+        e.preventDefault();
+        return;
+    }
+
+
+
+    var billing_id = selectedBilling;
+    var shipping_id = (isSameAsBillingChecked === true) ? billing_id : selectedShipping; // change as needed
+    var cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    var payment_type = document.querySelector('input[name="pay_online"]:checked')?.value;
+
+    var walletCheckbox = document.getElementById('flexRadioDefault11');
+    var wallet_type = walletCheckbox?.checked ? "wallet" : null;
+    if (wallet_type) {
+        var walletBalance = parseFloat(
+            document.getElementById('wallet_amount').innerText.replace(/[^\d.]/g, '')
+        ) || 0;
+
+        var subTotal = parseFloat($('.finalAmount').text().replace(/[^\d.]/g, ''));
+        var wallet_amount = 0;
+        if (walletCheckbox?.checked) {
+            if (walletBalance >= subTotal) {
+                wallet_amount = subTotal;
+                payment_type = "wallet";
+                subTotal = 0;
+            } else if (payment_type === "razorpay") {
+                wallet_amount = walletBalance;
+                subTotal = subTotal - walletBalance;
+            }
+        }
+    } else {
+        var subTotal = parseFloat($('.finalAmount').text().replace(/[^\d.]/g, ''));
+    }
+
+    var postData = {
+        cartItems: cartItems,
+        sub_total: subTotal,
+        payment_mode: payment_type,
+        coupon_id: localStorage.getItem('coupon_id'),
+        coupon_discount: parseFloat(localStorage.getItem('coupon_discount')) || 0,
+        wallet_amount: wallet_amount,
+        billing_id: billing_id,
+        shipping_id: shipping_id,
+        shippingcharge: 0
+    };
+
+    var url = window.location.origin + "/place-order";
+    that.prop('disabled', true).text('Please wait...');
+    $.ajax({
+        type: "POST",
+        url: url,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify(postData),
+
+        success: function (data) {
+            if (payment_type === "wallet" && data.success) {
+
+                localStorage.removeItem('cartItems');
+                localStorage.removeItem('coupon_id');
+                localStorage.removeItem('coupon_discount');
+                window.location.href = data.url;
+            }
+            if (payment_type == 'razorpay') {
+                if (data.success) {
+                    if (data.type == 'wallet') {
+                        localStorage.removeItem('cartItems');
+                        location.href = window.location.origin + "/dashboard";
+                    } else {
+                        var options = {
+                            "key": RAZORPAYKEY,
+                            "amount": data.data.amount,
+                            "currency": "INR",
+                            "name": "VASVI",
+                            "description": "Transaction",
+                            "image": "https://vasvi.in/uploads/settings/AUG2025/1755156000-settings.png",
+                            "order_id": data.data.id,
+                            "callback_url": window.location.origin + "/checkout-callback",
+                            "prefill": {
+                                "name": USERNAME,
+                                "email": USEREMAIL,
+                                "contact": USERPHONE
+                            },
+                            "notes": {
+                                "coupon_id": postData.coupon_id,
+                                "coupon_discount": postData.coupon_discount,
+                                "shippingcharge": postData.shippingcharge,
+                                "billing_id": postData.billing_id,
+                                "shipping_id": postData.shipping_id,
+                            },
+                            "theme": {
+                                "color": "#3399cc"
+                            }
+                        };
+                        var rzp1 = new Razorpay(options);
+                        rzp1.open();
+                    }
+                }
+            } else {
+                if (data.success) {
+                    localStorage.removeItem('cartItems');
+                    localStorage.removeItem('coupon_id');
+                    localStorage.removeItem('coupon_discount');
+                    window.location.href = data.url;
+                }
+            }
+            that.prop('disabled', false).text('Pay Now');
+        },
+        error: function (err) {
+            that.prop('disabled', false).text('Pay Now');
+            $('.error-msg').remove();
+            if (err.status == 422) {
+                $("#add-new-billing-address").addClass('d-none');
+                $('#new-billing-address').toggleClass('show');
+                $.each(err.responseJSON.errors, function (i, error) {
+                    var el = $(document).find('[name="' + i + '"]');
+                    el.after($('<span class="error-msg" style="color: red;">' + error[0] + '</span>'));
+                });
+            }
+        }
+    });
+});
+
+
+
+// Edit address case.
+$(document).on('change', '.editState', function () {
+    var stateId = $(this).val();
+    var selectedCityId = null; // dynamically set if needed
+
+    if (stateId) {
+        $.ajax({
+            url: '/get-cities/' + stateId,
+            type: 'GET',
+            success: function (response) {
+                var options = '<option value="">Select City</option>';
+                $.each(response, function (id, name) {
+                    var selected = (id == selectedCityId) ? 'selected' : '';
+                    options += '<option value="' + id + '" ' + selected + '>' + name + '</option>';
+                });
+                $('.editCity').html(options);
+            }
+        });
+    } else {
+        $('.editCity').html('<option value="">Select City</option>');
+    }
+});
+
+
+$(document).ready(function () {
+    $('.edit-address-btn').on('click', function () {
+        const addressId = $(this).data('id');
+
+        $.ajax({
+            url: '/get-user-address/' + addressId,
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+
+                //console.log(response);
+                // Populate fields
+                $('#editAddressForm select[name="country"]').val(response.country);
+                $('#editAddressForm input[name="firstname"]').val(response.firstname);
+                $('#editAddressForm input[name="lastname"]').val(response.lastname);
+                $('#editAddressForm input[name="address"]').val(response.address);
+                $('#editAddressForm input[name="addressSecond"]').val(response.addressSecond);
+                $('#editAddressForm select[name="state"]').val(response.state);
+                $('#editAddressForm select[name="city"]').html(`<option value="${response.city}" selected>${response.city_name}</option>`);
+                $('#editAddressForm input[name="pinCode"]').val(response.pinCode);
+                $('#editAddressForm input[name="phone"]').val(response.phone);
+                $('#editAddressForm input[name="addressId"]').val(response.address_id);
+
+                $('#editAddressForm input[name="address_place_type"][value="' + response.address_place_type + '"]').prop('checked', true);
+                console.log(response);
+            },
+            error: function (xhr) {
+                console.log(xhr.responseText);
+                alert('Something went wrong while fetching address.');
+            }
+        });
+    });
+});
+
+$(document).ready(function () {
+    $('#updateAddressBtn').on('click', function (e) {
+        e.preventDefault();
+
+        // Clear previous errors
+        $('#editAddressForm input, #editAddressForm select').removeClass('is-invalid');
+        $('.error-msg').remove();
+
+        // let isValid = true;
+
+
+        const formData = $('#editAddressForm').serialize();
+
+        // AJAX submission
+        $.ajax({
+            url: '/update-address', // Change to your actual route
+            method: 'POST',
+            data: formData,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Required for Laravel
+            },
+            success: function (response) {
+                if (response.success) {
+                    alert('Address updated successfully!');
+                    $('#edit-address').modal('hide');
+                    // Optionally reload address list
+                    location.reload();
+                } else {
+                    alert(response.message || 'Failed to update address.');
+                }
+            },
+            error: function (xhr) {
+                console.log(xhr.responseText);
+                alert('Something went wrong. Please try again.');
+            }
+        });
+    });
+
+    // Cancel button action
+    $('#cancelAddressBtn').on('click', function () {
+        $('#edit-address').modal('hide');
+    });
+});
+
+
+renderCart();
+
+function renderCart() {
+    var cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    var $container = $('#checkout-cart-container');
+    let couponDiscount = parseFloat(localStorage.getItem('coupon_discount')) || 0;
+    if (cartItems.length === 0) {
+        $container.html('<p>Your cart is empty.</p>');
+        $('#totalMrp, #delivery, #totalDiscount, #subTotal, #couponDiscount, #total-items, #grandTotal, #taxableAmount, #taxPrice, .finalAmount').text('₹0');
+        return;
+    }
+
+    let output = '<ul class="check-product-list">';
+    let delivery = 0;
+    let totalMrp = 0;
+    let totalDiscount = 0;
+    let totalTaxPrice = 0;
+    let taxOption = 'inclusive';
+    cartItems.forEach(function (item) {
+        totalMrp += item.price * item.quantity;
+        if (item.discountType == "flat") {
+            totalDiscount += parseInt(item.discountAmount);
+        } else if (item.discountType == "percentage") {
+            totalDiscount += ((parseInt(item.discountAmount) * totalMrp) / 100);
+        }
+        taxOption = item.tax_option;
+        totalTaxPrice += item.tax_price;
+        output += `
+                <li>
+                    <div class="cp-list-l">
+                        <figure><img src="${item.image}" alt="${item.name}"></figure>
+                        <span class="no-product">${item.quantity}</span>
+                    </div>
+                    <div class="cp-list-r">
+                        <figcaption>
+                            <h4>${item.name}</h4>
+                            <!-- <p>Bundles</p> -->
+                            <span>₹${item.sellingPrice}</span>
+                        </figcaption>
+                    </div>
+                </li>`;
+    });
+    output += '</ul>';
+    $container.html(output);
+    let subTotal = totalMrp - totalDiscount;
+    let grandTotal = subTotal - couponDiscount;
+    let taxableAmount = grandTotal;
+    if (taxOption == 'inclusive') {
+        taxableAmount = grandTotal - totalTaxPrice;
+    } else if (taxOption == 'exclusive') {
+        taxableAmount = grandTotal;
+    }
+    let finalAmount = grandTotal;
+    console.log("------cartItems-chk------", cartItems);
+    console.log("-----finalAmount-chk-----", finalAmount);
+    console.log("-----couponDiscount-chk-----", couponDiscount);
+    // Update Summary
+    if (totalMrp > 0) {
+        $("#totalMrp").html(`₹${Math.floor(totalMrp)}`).show();
+    } else {
+        $("#totalMrp").html("0"); // Or use .text('') depending on your layout
+    }
+    if (totalDiscount > 0) {
+        $("#totalDiscount").html(`-₹${totalDiscount.toFixed(2)}`).show();
+    } else {
+        $("#totalDiscount").html("0"); // Or use .text('') depending on your layout
+    }
+    $('#subTotal').html(`₹${(subTotal).toFixed(2)}`);
+    if (couponDiscount > 0) {
+        $("#couponDiscount").html(`-₹${couponDiscount.toFixed(2)}`).show();
+    } else {
+        $("#couponDiscount").html("0"); // Or use .text('') depending on your layout
+    }
+    $('#grandTotal').html(`₹${(grandTotal).toFixed(2)}`);
+    $('#taxableAmount').html(`₹${(taxableAmount).toFixed(2)}`);
+    if (taxOption == 'inclusive') {
+        $("#taxPrice").html(`+₹${totalTaxPrice.toFixed(2)}`).show();
+    } else if (taxOption == 'exclusive') {
+        $("#taxPrice").html(`+₹${totalTaxPrice.toFixed(2)}`).show();
+    } else {
+        $("#taxPrice").html("0"); // Or use .text('') depending on your layout
+    }
+    if (finalAmount > 0) {
+        //$('.finalAmount').html(`₹${finalAmount.toFixed(2)}`);
+        if (taxOption == 'inclusive') {
+            $('.finalAmount').html(`₹${Math.floor(finalAmount)}`);
+        } else if (taxOption == 'exclusive') {
+            $('.finalAmount').html(`₹${Math.floor(finalAmount + totalTaxPrice)}`);
+        }
+        $('.checkoutButton').removeClass('disabled-link');
+    } else {
+        $('.finalAmount').html(`₹0`);
+        $('.checkoutButton').addClass('disabled-link');
+    }
+    $('#delivery').text(`₹${delivery.toLocaleString()}`);
+    $('#total-items').text(cartItems.length);
+}
+
+
+$('.shipping_cancel').on('click', function () {
+    $('#main_shipping').slideUp();
+});
+
+$('.billing_cancel').on('click', function () {
+    $('#main_billing').slideUp();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const wallet = document.getElementById("flexRadioDefault11");
+    const paymentRadios = document.querySelectorAll("input[name='pay_online']");
+    if (wallet) {
+        const toggleWallet = () => {
+            wallet.disabled = document.getElementById("flexRadioDefault13").checked;
+            if (wallet.disabled) wallet.checked = false;
+        };
+
+        paymentRadios.forEach(r => r.addEventListener("change", toggleWallet));
+        toggleWallet();
+    }
+});

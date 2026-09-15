@@ -158,7 +158,6 @@ Route::prefix('')->name('admin-')->group(function () {
             Route::post('prices/update', [MainProductController::class, 'updateVariantsPrices'])->name('product.prices.update');
             Route::post('product/update-order', [MainProductController::class, 'updateProductOrder'])->name('product.updateProductOrder');
 
-
             Route::match(['get', 'post'], 'list', [ProductController::class, 'index'])->name('list');
             Route::get('create-new-product/{token?}', [MainProductController::class, 'addNewProduct'])->name('create-new-product');
             Route::any('save-product/{product_id?}', [MainProductController::class, 'store'])->name('save-new-product');

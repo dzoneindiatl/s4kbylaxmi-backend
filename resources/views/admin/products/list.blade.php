@@ -150,9 +150,9 @@
                         </div>
                     </div>
                     <form action="{{ route('admin-product-updatedata') }}">
-                        <div class="container mt-4 mb-4">
+                        <div class="container">
                             <div class="row">
-                                <div class="col-2 mt-4">
+                                <div class="col-2 mt-2">
                                     <label for="selectOptions" class="form-label">Select All:</label>
                                     <input type="checkbox" id="selectAll">
                                 </div>
@@ -160,13 +160,16 @@
                                     <label for="selectOptions" class="form-label">Bulk Action:</label>
                                     <select name="bulk_action" class="form-select" id="selectOptions">
                                         <option value="" selected>Select Bulk</option>
-                                        <option value="1">Mark as draft</option>
-                                        <option value="2">Mark as published</option>
-                                        <option value="3">Mark as unpublished</option>
-                                        <option value="4">Mark as featured</option>
-                                        <option value="5">Mark as unfeatured</option>
-                                        <option value="6">Mark as new arrivals</option>
-                                        <option value="7">Mark as new unarrivals</option>
+                                        <option value="3">Mark as published</option>
+                                        <option value="4">Mark as unpublished</option>
+                                        <option value="1">Mark as draft (active)</option>
+                                        <option value="2">mark as draft (In-active)</option>
+                                        <option value="5">Mark as featured (active)</option>
+                                        <option value="6">Mark as featured (In-active)</option>
+                                        <option value="7">Mark as new arrivals (active)</option>
+                                        <option value="8">Mark as new arrivals (In-active)</option>
+                                        <option value="9">Mark as Best Seller (active)</option>
+                                        <option value="10">Mark as Best Seller (In-active)</option>
                                     </select>
                                 </div>
                                 <div class="col-2">
@@ -195,10 +198,9 @@
                                                 class="sort-icon ri-sort-asc"></i></th>
                                         <th class="sortable" data-column="products.buying_price">Price <i
                                                 class="sort-icon ri-sort-asc"></i></th>
-                                        <th>Status</th>
+                                        <th>Feature</th>
                                         <th>Out of Stock</th>
-                                        <th>Publish</th>
-                                        <!-- <th>Quantity</th> -->
+                                        <th>Status</th>
                                         <th>T.Qty</th>
                                         <th>T.Avl</th>
                                         <th style="min-width:225px;">Action</th>
@@ -250,23 +252,6 @@
             </div>
         </div>
     </div>
-    <!-- Price Modal -->
-    <div class="modal fade" id="priceModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <h5 class="modal-title">Product & Variant Prices</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body" id="priceModalBody">
-                    <div class="text-center">Loading...</div>
-                </div>
-
-            </div>
-        </div>
-    </div>
 
     <div class="modal fade" id="importProductModal" tabindex="-1">
         <div class="modal-dialog">
@@ -311,7 +296,7 @@
 
     <script src="{{ asset('assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('assets/js/sweet-alerts.js') }}"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
     <script>
         $(document).ready(function() {
             $(document).on('change', '.in-stock-checkbox', function() {
@@ -594,9 +579,7 @@
         </script>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
-<script src="{{ asset('assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
-<script src="{{ asset('assets/js/sweet-alerts.js') }}"></script>
+
 <script type="text/javascript">
     new Sortable(powerwidgets, {
         animation: 150,

@@ -1,0 +1,68 @@
+@media(max-width: 1600px) {
+    .hero { height: auto;}
+    .hero .slick-dotted.slick-slider { margin-bottom: 0;}
+}
+
+@media(max-width: 1366px) {
+     html { font-size: 45%;}
+     .room-categories a { justify-content: flex-start; width: 150px;}
+     .room-categories span { margin-left: inherit;}
+}
+
+@media (min-width: 1200px) and (max-width: 1300px) {
+    html { font-size: 45%;}
+    .room-categories a { width: 20rem;}
+}
+
+
+@media(max-width: 1155px) {
+    .mobile_menu { 
+        display: flex;
+        background: var(--bg-primary);
+        border: solid 1px #ccc;
+        padding: 1px 4px;
+        cursor: pointer;
+    }
+}
+
+
+@media(max-width: 1024px) {
+    .fw_home_frunishing_grid { flex-direction: column;}
+    .fw_home_frunishing_grid_banner_image {max-width: 100%; margin: auto; height: 300px; aspect-ratio: inherit;}
+    .fw_home_furnishing .product_card { flex: 0 1 300px;}
+
+    .room-layout { grid-template-columns: 1fr;}
+    .room-content { text-align: center;}
+    .room-content .nav_btn_container { justify-content: center;}
+    .room-card { max-width: 360px;}
+}
+
+@media(max-width: 770px) {
+    .fw_home_frunishing_product_grid { justify-content: center;}
+}
+
+
+@media(max-width: 640px) {
+    .header_container, .fw_refresh_wrap { flex-direction: column; gap: 2rem;}
+    .fw_refresh_content { width: 100%; max-width: 420px; }
+    .fw_refresh_slider { width: 100%; min-width: 0; }
+    .fw_collection_card { max-width: 400px;}
+
+    .fw_subcategory_grid { flex-direction: column;}
+    .fw_subcat_large { aspect-ratio: 1/1;}
+    .fw_subcategory_grid_left, .fw_subcategory_grid_right { flex: inherit;}
+
+    .fw_home_furnishing .product_card { flex: 0 1 100%;}
+    .product-card, .insta-card { margin-right: 0;}
+
+    .search-content { grid-template-columns: 1fr;}
+
+    .room-categories a { width: 100%;}
+    
+    .testimonial-stack { margin: 5rem 0;}
+
+    .cart-wrapper .cart-dropdown { width: 270px;}
+    .product-card .action-btn { height: 40px;}
+    
+}
+

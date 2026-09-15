@@ -99,19 +99,32 @@
             <div class="card-body">
                 <div class="row">
                     <input type="hidden" name="product_id" id="product_id" value="{{ $product->id }}">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-4 mb-3">
                         <div class="form-group">
                             <label for="name">Name <span class="text-danger">*</span></label>
-                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ $product->name }}" required>
+                            <input type="text" name="name" id="product_name" class="form-control @error('name') is-invalid @enderror" value="{{ $product->name }}" required>
                             @if ($errors->has('name'))
                                 <div class=" invalid-feedback">
                                     {{ $errors->first('name') }}
                                 </div>
                             @endif
+                            <span id="productNameError"></span>
                         </div>
                     </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="form-group">
+                            <label for="status">Status <span class="text-danger">*</span></label>
+                            <select name="status" id="status" class="form-control">
+                                <option value="">Select Status</option>
+                                <option value="1" @if($product->is_active == 1) selected @endif>Published</option>
+                                <option value="0" @if($product->is_active == 0) selected @endif>Unpublished</option>
+                                <option value="2" @if($product->is_active == 2) selected @endif>Draft</option>
+                            </select>
+                        </div>
+                        <span id="productStatusError"></span>
+                    </div>
                     <!-- Add Code of Mohit -->
-                    <div class="col-md-6  mb-3">
+                    <div class="col-md-4  mb-3">
                         <div class="form-group">
                             <label for="weight_type">Country Of Origin <span class="text-danger">*</span></label>
                             <select name="country_origin" class="form-control" required>
@@ -134,11 +147,7 @@
                                 <div class="form-group">
                                     <label for="sku">SKU <!--<span class="text-danger">*</span> --></label>
                                     <input type="text" class="form-control @error('sku') is-invalid @enderror" id="sku" value="{{ $product->sku }}" name="sku"  placeholder="SKU">
-                                    {{-- <!-- @if ($errors->has('sku'))
-                                        <div class=" invalid-feedback">
-                                            {{ $errors->first('sku') }}
-                                        </div>
-                                    @endif --> --}}
+                                    <span id="skuError" class="text text-danger"></span>
                                 </div>
                             </div>
                             <div class="col  mb-3">
@@ -373,6 +382,7 @@
                         <label for="buying_price">MRP<span class="text-danger">*</span></label>
                         <input type="number" id="buying_price" name="buying_price" class="form-control" required
                             value="{{ $product->buying_price }}" />
+                        <span id="buyingPriceError" class="text text-danger"></span>    
                     </div>
 
                     <div class="col-4 mb-3">
@@ -390,6 +400,7 @@
                         <label for="discount">Discount</label>
                         <input type="number" id="discount" name="discount" class="form-control"
                             value="{{ $product->discount }}" />
+                            
                     </div>
 
                     <div class="col-4 mb-3">
@@ -402,6 +413,7 @@
                         <label for="qty">Quantity <span class="text-danger">*</span></label>
                         <input type="number" id="qty" name="qty" class="form-control" required
                             value="{{ $product->qty }}" />
+                            <span id="qtyError" class="text text-danger"></span>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -430,6 +442,7 @@
                 @if($product->product_type==2)
                 <div class="card-body" id="variant_group_details test2">
                     {!! $variantReleatedProduct !!}
+                    <span id="imageError"> </span>
                 </div>
                 @else
                 <div class="card-body" id="variant_group_details">
@@ -594,6 +607,7 @@
                 ?>
                 <button type="button" class="btn btn-primary prevBtn btn-lg" onclick="onclickPrevious('step1')">Previous</button>
                 <button type="button" id="finish" class="btn btn-primary nextBtn btn-lg">Save</button>
+                <button type="button" id="saveAsdraf" class="btn btn-danger nextBtn btn-lg">Save as Draf</button>
                 {{-- <button type="button" id="finish" class="btn btn-primary nextBtn">Finish</button> --}}
             </div>
         </div>
@@ -1110,14 +1124,6 @@
     });
 
     $(document).ready(function() {
-
-        // Active step 3 linktab &  stepdiv 
-        // $(".tab-pane").removeClass("active");
-        // $("#tab3").addClass("active");
-
-        // $(".nav-link").removeClass("active");
-        // $('#step3').addClass("active");
-
         $('#productForm').validate({
             errorClass: 'is-invalid',
             errorElement: 'div',
@@ -1133,9 +1139,6 @@
             }
         });
 
-        // updateProductDescriptionSection();
-        // initProductDetailCkeditors();
-
         $('.nextBtn').on('click', function(e) {
             var nextBtnId = $(this).attr('id');
             const $btn = $('.nextBtn');
@@ -1148,94 +1151,188 @@
             const form = $('#productForm');
 
             // if (form.valid()) {
-                const formData = new FormData(form[0]);
+            const formElement = $('#productForm')[0];
+            var globalSku = $('#sku').val();
+            var globalBuyingPrice = $('#buying_price').val(); 
+            var globalQty = $('#qty').val(); 
+            var globalProductName = $('#product_name').val(); 
 
-                $.ajax({
-                    url: "{{ route('admin-product-save.step3') }}",
-                    type: "POST",
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                            'content') // CSRF token
-                    },
-                    beforeSend: function() {
-                        $btn.prop('disabled', true).html(`
-                            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-                            Processing...
-                        `);
-                    },
-                    success: function(response) {
-                        if(!response.success){
-                            Swal.fire({ icon: 'error', title: 'Validation Error', text: response.message });
-                            return false;
-                        } else {
-                            if(nextBtnId=='finish'){
-                                window.location.href = "{{ route('admin-product-list') }}";
-                                return false;
-                            }
-                            $('#tab2').html("");
-                            $('#formTabs .nav-link').removeClass('active');
-                            $('#formTabs .nav-link[data-tab="tab4"]').addClass('active');
-                            $('#tab2').html(response.seoView);
-                        }
-                    },
-                    error: function(xhr) {
-                        if (xhr.status === 422) {
-                            const errors = xhr.responseJSON.errors;
+            var globalProductStatus = $('#status').val(); 
 
-                            // Clear previous errors from popup
-                            $('#formErrorList').empty();
-                            $('#formErrorPopup').addClass('d-none');
+            if(globalProductName == '' || globalProductName == null || globalProductName.length < 3 || globalProductName.length > 254){
+                $('#productNameError').text("Please Enter Product Name");
+                return false;  
+            }
 
-                            // Clear field errors
-                            $('.invalid-feedback').remove();
-                            $('.is-invalid').removeClass('is-invalid');
+            if(globalProductStatus == '' || globalProductStatus == null){
+                $('#productStatusError').text('Please Select any status'); 
+                return false; 
+            }
 
-                            // Loop through errors
-                            $.each(errors, function(key, messages) {
-                                // Show in popup
-                                messages.forEach(msg => {
-                                    $('#formErrorList').append('<li>' +
-                                        msg + '</li>');
-                                });
+            if(globalSku == '' || globalSku == null ){
+                $('#skuError').text("Please Enter Product Sku"); 
+                return false; 
+            } 
 
-                                // Show field-level error if input exists
-                                let field = $('[name="' + key + '"]');
+            if(globalBuyingPrice == '' || globalBuyingPrice == null || globalBuyingPrice == 0){
+                $('#buyingPriceError').text("Please Enter Product MRP"); 
+                  return false; 
+            }
 
-                                // Handle array inputs like variant_name[0]
-                                if (!field.length && key.includes('.')) {
-                                    const [base, index] = key.split('.');
-                                    field = $('[name="' + base + '[' + index +
-                                        ']"]');
-                                }
+            if(globalQty == '' || globalQty == null || globalQty == 0){ 
+                $('#qtyError').text("Please Enter Product Quantity"); 
+                  return false; 
+            }
+            document.querySelectorAll('#productForm input[type="file"][name^="variant_images["]').forEach(input => {
+                input.removeAttribute('name');
+            });
+            const formData = new FormData(formElement);
+            $('.updateFrontBackIcon:checked').each(function () {
 
-                                if (field.length) {
-                                    field.addClass('is-invalid');
-                                    field.after(
-                                        '<div class="invalid-feedback d-block">' +
-                                        messages[0] + '</div>');
-                                }
-                            });
+                const variantId = $(this).data('vid');
+                const type = $(this).data('type');
+                const graphicId = $(this).data('id');
 
-                            // Finally, show the popup
-                            $('#formErrorPopup').removeClass('d-none');
-                            $btn.prop('disabled', false).html(originalHtml);
-                        } else {
-                            alert('Something went wrong. Please try again.');
-                            $btn.prop('disabled', false).html(originalHtml);
-                        }
-                    },
-                    complete: function() {
-                        if(nextBtnId !='finish'){
-                            $btn.prop('disabled', false).html(originalHtml);
-                        }
+                if (!variantId || !graphicId || !type) {
+                    return;
+                }
+
+                if (type === 'front') {
+                    formData.append(`existing_front_image[${variantId}]`,graphicId);
+
+                } else if (type === 'back') {
+                    formData.append(`existing_back_image[${variantId}]`,graphicId);
+
+                } else if (type === 'icon') {
+                    formData.append(`existing_variant_icon[${variantId}]`,graphicId);
+                }
+            });
+            Object.entries(window.uploadedImages).forEach(([variantId, images]) => {
+                console.log('VARIANT:', variantId);
+                images.forEach((imageData) => {
+                    formData.append(
+                        `variant_images[${variantId}][]`,
+                        imageData.file
+                    );
+                    formData.append(
+                        `image_id[${variantId}][]`,
+                        imageData.imageId
+                    );
+
+                    if (imageData.front) {
+                        formData.append(
+                            `front_image[${variantId}]`,
+                            imageData.imageId
+                        );
                     }
-                    // $btn.prop('disabled', false).html(originalHtml);
 
+                    if (imageData.back) {
+                        formData.append(
+                            `back_image[${variantId}]`,
+                            imageData.imageId
+                        );
+                    }
+
+                    if (imageData.icon) {
+                        formData.append(
+                            `variant_icon[${variantId}]`,
+                            imageData.imageId
+                        );
+                    }
                 });
-            // }
+            }); 
+            
+            if(nextBtnId == 'saveAsdraf'){ 
+                swal.fire({
+                    title: "Are you sure?",
+                    text: "Want to save this product as draf?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes,",
+                    cancelButtonText: "No, cancel",
+                    reverseButtons: true
+                }).then(function(result){
+                    if(result.isConfirmed){
+                        formData.append("save_as_draf", 1);
+                        submitProductDetail(formData,nextBtnId,$btn); 
+                    }
+                }); 
+            }
+            else{
+                let variantErrors = [];
+                let variantIds = new Set();
+                $('.out-of-stock-toggle').each(function(){
+                    const variantId = $(this).data('variant-id');
+                        if (variantId) {
+                            variantIds.add(String(variantId));
+                        }
+                }); 
+                $('.updateFrontBackIcon:checked').each(function () {
+                    const variantId = $(this).data('vid');
+
+                    if (variantId) {
+                        variantIds.add(String(variantId));
+                    }
+                });
+                variantIds.forEach(function (variantId) {
+                    let hasImage = false;
+                    let hasFront = false;
+                    let hasBack = false; 
+                    const images = window.uploadedImages?.[variantId] || [];
+                    if (images.length > 0) {
+                        hasImage = true;
+                        images.forEach(function (imageData) {
+                            if (imageData.front) {
+                                hasFront = true;
+                            }
+                            if (imageData.back) {
+                                hasBack = true;
+                            }
+                        });
+                    }
+                    $('.updateFrontBackIcon:checked').each(function () {
+
+                        const existingVariantId = String($(this).data('vid'));
+                        const type = $(this).data('type');
+                        const graphicId = $(this).data('id');
+
+                        if (existingVariantId === String(variantId) &&
+                            graphicId) {
+                            hasImage = true;
+                            if (type === 'front') {
+                                hasFront = true;
+                            }
+                            if (type === 'back') {
+                                hasBack = true;
+                            }
+                        }
+                    });
+                    if (!hasImage) {
+                        variantErrors.push(
+                            `Variant ${variantId}: Please add an image.`
+                        );
+
+                    } else if (!hasFront) {
+                        variantErrors.push(
+                            `Variant ${variantId}: Please select a front image.`
+                        );
+                    } else if (!hasBack) {
+                        variantErrors.push(
+                            `Variant ${variantId}: Please select a back image.`
+                        );
+                    }
+                }); 
+                if (variantErrors.length > 0) {
+                    Swal.fire({
+                        title: "Image Required",
+                        html: variantErrors.join('<br>'),
+                        icon: "warning",
+                        confirmButtonText: "OK"
+                    });
+                    return false;
+                }
+                submitProductDetail(formData,nextBtnId,$btn); 
+            }    
         });
     });
 
@@ -1254,6 +1351,78 @@
         }
     });
 
+    function submitProductDetail(formData,nextBtnId,$btn){
+        $.ajax({
+            url: "{{ route('admin-product-save.step3') }}",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
+            },
+            beforeSend: function() {
+                if(nextBtnId == 'finish'){
+                    $btn.prop('disabled', true).html(`<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Processing...`);
+                }else{
+                    $btn.prop('disabled',true); 
+                }
+            },
+            success: function(response) {
+                if(!response.success){
+                    Swal.fire({ icon: 'error', title: 'Validation Error', text: response.message });
+                    return false;
+                } 
+                else 
+                {
+                    if(nextBtnId =='finish' || nextBtnId =='saveAsdraf'){
+                        window.location.href = "{{ route('admin-product-list') }}";
+                        return false;
+                    }
+                    $('#tab2').html("");
+                    $('#formTabs .nav-link').removeClass('active');
+                    $('#formTabs .nav-link[data-tab="tab4"]').addClass('active');
+                    $('#tab2').html(response.seoView);
+                }
+            },
+            error: function(xhr) {
+                if (xhr.status === 422) 
+                {
+                    const errors = xhr.responseJSON.errors;
+                    $('#formErrorList').empty();
+                    $('#formErrorPopup').addClass('d-none');
+                    $('.invalid-feedback').remove();
+                    $('.is-invalid').removeClass('is-invalid');
+                    $.each(errors, function(key, messages) {
+                        messages.forEach(msg => {
+                            $('#formErrorList').append('<li>' + msg + '</li>');
+                        });
+                        let field = $('[name="' + key + '"]');
+                        if (!field.length && key.includes('.')) {
+                            const [base, index] = key.split('.');
+                            field = $('[name="' + base + '[' + index +']"]');
+                        }
+                        if (field.length) {
+                            field.addClass('is-invalid');
+                            field.after('<div class="invalid-feedback d-block">' +messages[0] + '</div>');
+                        }
+                    });
+                    $('#formErrorPopup').removeClass('d-none');
+                    $btn.prop('disabled', false).html(originalHtml);
+                } 
+                else 
+                {
+                    alert('Something went wrong. Please try again.');
+                    $btn.prop('disabled', false).html(originalHtml);
+                }
+            },                
+            complete: function() {
+                if(nextBtnId !='finish'){
+                    $btn.prop('disabled', false).html(originalHtml);
+                }
+            }
+        });
+    }
 
     function onclickPrevious(value) {
         const $btn = $('.prevBtn');

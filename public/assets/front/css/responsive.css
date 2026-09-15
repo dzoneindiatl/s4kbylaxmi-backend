@@ -1,0 +1,382 @@
+@media(max-width:1199px){
+
+       .main_menu > ul > li{ padding: 0 12px;}
+
+       .main_menu ul li a {
+    font-size: 16px;}
+
+    .sec1.padding-top-100 {
+    padding-top: 50px !important;
+    padding-bottom: 10px !important;
+}
+.women-seller.women-seller-slider {
+    padding-top: 50px ! IMPORTANT;
+    padding-bottom: 0px !important;
+}
+.mens-coll.margin-top-100 {
+    margin-top: 70px !important;        
+}           
+.cat-col-inner:hover .categories-text{    left: 27px;    bottom: 27px;}
+.women-seller.shop-cat.padding-top-100 {
+    padding-top: 50px !important;
+    margin-bottom: 0 !IMPORTANT;
+}
+.indo-western-main {
+    padding-bottom: 60px ! IMPORTANT;
+    margin-top: 80px !important;
+}
+.indo-western-left-img .indo-western-layer-img{    top: -104px;    width: 250px;}
+
+.wedding-invite .feature-row h2 {
+    font-size: 32px;
+        line-height: 47px;
+}
+.subscribe-sec .col-md-6 {
+    width: 70%;
+}
+
+.sec6 .viewBox h3 {
+    font-size: 18px;
+    margin-bottom: 3px;
+    margin-top: 22px;
+}
+.view-box-r {
+    padding-left: 0;
+}
+.sec6.shopping-info .row {
+  
+    margin-bottom: -100px;
+}
+.box-content {
+    flex-direction: column;
+}
+
+.view-box-r {
+    text-align: center;
+}
+.subscribe-sec {
+    padding-top: 50px !important;
+    padding-bottom: 50px ! IMPORTANT;
+}
+
+}
+
+@media (max-width: 1024px) {
+  .button-group .btn {
+    padding: 8px 20px;
+    font-size: 0.9rem;
+  }
+
+  .section-text-headung .main-heading {
+    font-size: 2rem;
+  }
+
+    #fixed-header .logo img {
+    width: 85px;
+  }
+
+  .navbar-nav li {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}
+
+@media (min-width: 992px) {
+  .main-heading {
+    font-size: 2.5rem;
+  }
+
+  .frem-btn {
+    font-size: 1rem;
+    padding: 12px 24px;
+  }
+
+  .right-content h3 {
+    font-size: 2.5rem;
+  }
+
+  .button {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .button-group {
+    gap: 10px;
+  }
+
+    .col-3 {
+    width: 25%;
+  }
+
+  .col-6 {
+    width: 50%;
+  }
+
+  .button-group .btn {
+    margin: 5px 0;
+  }
+
+  .price-btn-sec {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .add-cart-btn {
+    margin-left: 0 !important;
+  }
+
+  .images-frem .row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0px;
+}
+
+.col-3,
+.col-6 {
+  width: 100%;
+}
+
+.indo-western-left-img {
+    position: relative;
+    padding: 40%;
+    z-index: 1;
+    margin-top: -125px;
+}
+
+.section-text-headung {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.heading-flower-image img {
+  width: 50px;
+  animation: float 4s ease-in-out infinite;
+}
+
+.section-text-headung-line-before,
+.section-text-headung-line-after {
+  display: inline-block;
+  width: 40px;
+  height: 2px;
+  background-color: #e91e63;
+  margin: 0 10px;
+}
+
+.inner-frem figure {
+  margin: 0;
+}
+
+.inner-frem img {
+  width: 100%;
+  display: block;
+  border-radius: 12px;
+}
+
+.frem-btn {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #e91e63;
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(233, 30, 99, 0.4);
+  transition: all 0.3s ease;
+}
+
+.frem-btn:hover {
+  background-color: #c2185b;
+  transform: translateX(-50%) scale(1.05);
+}
+  
+    #fixed-header {
+      padding: 10px 15px;
+    }
+
+  .indo-western-main {
+  background-color: #f9f9f9;
+}
+
+.indo-western-left-img {
+  position: relative;
+  width: 100%;
+}
+
+.indo-western-left-img img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+}
+
+.indo-western-layer-img1 {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 80%;
+  z-index: 1;
+  opacity: 0.6;
+}
+
+.indo-western-layer-img {
+  position: relative;
+  z-index: 2;
+  border: 4px solid white;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.right-content {
+  max-width: 600px;
+}
+
+.right-content p {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  color: #666;
+}
+
+.right-content h3 {
+  font-size: 2.2rem;
+  color: #e91e63;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.rte p {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #444;
+}
+
+.button {
+  display: inline-block;
+  background-color: #e91e63;
+  color: #fff;
+  padding: 12px 28px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #c2185b;
+}
+
+  .shopping-info .row::before{
+    display: none;
+  }
+
+    .shopping-info .row::after {
+    display: none;
+  }
+
+  .section-text-headung {
+  text-align: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.section-text-headung-line-before,
+.section-text-headung-line-after {
+  display: inline-block;
+  width: 50px;
+  height: 2px;
+  background-color: #000;
+  vertical-align: middle;
+  margin: 0 10px;
+}
+
+.main-heading {
+  font-size: 2rem;
+  margin: 1rem 0;
+}
+
+.border-1,
+.border-2 {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.feature_image img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+
+.mens-coll-bottom-btn {
+  text-align: center;
+  padding: 10px 0;
+  background-color: #f7f7f7;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.top-space {
+  margin-top: 20px;
+}
+
+section.mens-coll {
+    background: #f2eca2;
+    padding: 70px 0px 70px 0px;
+    width: 95%;
+    position: relative;
+}
+
+.indo-western-left-img .indo-western-layer-img{
+  display: none;
+}
+
+.indo-western-left-img:before{
+  display: none;
+}
+
+.indo-western-left-img::after{
+  display: none;
+}
+
+/* .right-icon ul li svg{
+   width: 20px;
+} */
+
+/* .navbar-nav{
+  width: 100%;
+} */
+
+header .logo{
+  width: 85px;
+}
+
+.main_menu ul li a{
+    padding: 10px 0px !important;
+    width: 300px;
+}
+
+}
+
+@media (max-width: 767px) {
+.button-group .btn {
+    padding: 8px 13px;
+}
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+.add-cart-btn.ms-4 {
+    margin-left: 0px !important;
+}
+}

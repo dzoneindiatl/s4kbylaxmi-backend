@@ -27,7 +27,7 @@ class ProductCollectionController extends Controller
         $this->request = $request;
     }
     public function index(Request $request)
-    {
+    {   
          try {
             $DB = ProductCollection::query();
             $sortBy = $request->input('sortBy') ? $request->input('sortBy') : 'created_at';
