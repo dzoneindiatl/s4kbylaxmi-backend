@@ -154,7 +154,6 @@ class ProductTabService
 
     public function step3(array $data): Product
     {
-        info("----all complete product data--------",$data);
         return DB::transaction(function () use ($data) {
             $productTags = is_array($data['product_tags'] ?? null)
                 ? implode(',', $data['product_tags']) : ($data['product_tags'] ?? '');

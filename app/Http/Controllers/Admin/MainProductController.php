@@ -230,7 +230,6 @@ class MainProductController extends Controller
         $product = Product::where('id',$product_id)->first(); 
         $primaryVariantId = $variantIds[0];
         $primaryValues = $variantValues[0];
-        $productVariantSpecification = ProductVariantSpecialization::whereIn('variant_value_id',$primaryValues)->where('product_id',$product_id)->get(); 
         $allCombos = $this->generateAllCombinations($variantValues);
         $savedCombos = ProductVariantCombination::where('product_id', $product_id)
             ->where('status', '1')
@@ -300,7 +299,6 @@ class MainProductController extends Controller
                 'outOfStockCombinations',
                 'imagePath',
                 'product',
-                'productVariantSpecification'
             )
         )->render();
     }
