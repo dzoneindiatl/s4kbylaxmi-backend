@@ -170,7 +170,7 @@
                     data-product-id="{{ $product->id }}"
                     {{ $product->is_featured ? 'checked' : '' }}>
                 <br>
-                Is Featured
+                Is Trending
                 <input type="checkbox"
                     class="toggle-checkbox"
                     data-field="trending"

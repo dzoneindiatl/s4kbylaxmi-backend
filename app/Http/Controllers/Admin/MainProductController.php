@@ -112,13 +112,6 @@ class MainProductController extends Controller
                 'selectedVariants' => $selectedVariants
             ]
         ]);
-
-        //     return $variantView = view('modals.products.create_variant_combined', [
-        //     'variantsData' => $variantsData,
-        //     'product_id' => $productId,
-        //     'product_type' => $product_type,
-        //     "selectedVariants" => $selectedVariants
-        // ])->render();    
     }
     public function previousStep3($productId)
     {   
@@ -164,7 +157,6 @@ class MainProductController extends Controller
         $product->meta_title       = $request->meta_title;
         $product->meta_description = $request->meta_description;
         $product->seo_content      = $request->seo_content;
-        $product->is_active        = 1;
         $product->meta_keywords     = $request->meta_keywords;
         $product->save();
         $seoView = view('admin.prodcuts.seo_feature_combined', [

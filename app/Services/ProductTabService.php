@@ -176,7 +176,12 @@ class ProductTabService
             if($data['qty'] > 0){
                 $qty = $data['qty'];
             }
-            
+            if(isset($data['save_as_draf']) && !empty($data['save_as_draf'])){
+                $data['is_active']= "2";  
+            }  
+            else{
+                $data['is_active'] = $data['status']; 
+            }
             $finalData = [
                 'parent_id' => 0,
                 'name' => $data['name'],
@@ -217,7 +222,7 @@ class ProductTabService
                 'product_tags' => $productTags,
 
                 // Status & Flags
-                'draf' => 0,
+                'draf' => $data['is_active'],
                 'is_active' => $data['is_active'] ?? 1,
                 'is_new' => isset($data['is_new']) ? 1 : 0,
                 'is_new_arrivals' => isset($data['is_new_arrivals']) ? 1 : 0,
@@ -585,27 +590,6 @@ class ProductTabService
             }
         }
     }
-
-    // public function updateFrontBackVariantImage($variantId, $imgId, $type = 'front'){
-    //     $isExistImg = ProductGraphics::where('variant_id',$variantId)->where('id',$imgId)->first();
-    //     $return = false;
-    //     if(!empty($isExistImg)){
-    //         if($type == 'front') {
-    //             ProductGraphics::where('variant_id',$variantId)->where('id',$imgId)->update(['is_front'=>0]);
-    //             $isExistImg->update(['is_front'=>1]);
-    //             $return = true;
-    //         } else if($type == 'back') {
-    //             ProductGraphics::where('variant_id',$variantId)->where('id',$imgId)->update(['is_back'=>0]);
-    //             $isExistImg->update(['is_back'=>1]);
-    //             $return = true;
-    //         } else if($type == 'icon') {
-    //             ProductGraphics::where('variant_id',$variantId)->where('id',$imgId)->update(['is_variant_icon'=>0]);
-    //             $isExistImg->update(['is_variant_icon'=>1]);
-    //             $return = true;
-    //         }
-    //     }
-    //     return $return;
-    // }
 
     public function updateFrontBackVariantImage( $variantId, $imgId, $type = 'front', $productid)
     {

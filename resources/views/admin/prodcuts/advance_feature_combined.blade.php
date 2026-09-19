@@ -116,9 +116,9 @@
                             <label for="status">Status <span class="text-danger">*</span></label>
                             <select name="status" id="status" class="form-control">
                                 <option value="">Select Status</option>
-                                <option value="1" @if($product->is_active == 1) selected @endif>Published</option>
-                                <option value="0" @if($product->is_active == 0) selected @endif>Unpublished</option>
-                                <option value="2" @if($product->is_active == 2) selected @endif>Draft</option>
+                                <option value="1" @if($product->is_active == "1") selected @endif>Published</option>
+                                <option value="0" @if($product->is_active == "0") selected @endif>Unpublished</option>
+                                <option value="2" @if($product->is_active == "2") selected @endif>Draft</option>
                             </select>
                         </div>
                         <span id="productStatusError"></span>
@@ -206,8 +206,6 @@
 
 
             <div class="accordion" id="productAccordion">
-
-                {{-- 1. Shipping Information --}}
                 <div class="accordion-item card custom-card">
                     <h2 class="accordion-header" id="headingShipping">
                         <button class="accordion-button" type="button" data-bs-toggle="collapse"
@@ -435,10 +433,6 @@
             
             {{-- Variant Section --}}
             <div class="card mt-3">
-                <!-- <div class="card-header d-flex justify-content-between align-items-center">
-                <h6>Variants</h6>
-                <div><strong>Grand Total Qty:</strong> <span id="t-qty" class="t-qty">0</span></div>
-            </div> -->
                 @if($product->product_type==2)
                 <div class="card-body" id="variant_group_details test2">
                     {!! $variantReleatedProduct !!}
@@ -608,7 +602,6 @@
                 <button type="button" class="btn btn-primary prevBtn btn-lg" onclick="onclickPrevious('step1')">Previous</button>
                 <button type="button" id="finish" class="btn btn-primary nextBtn btn-lg">Save</button>
                 <button type="button" id="saveAsdraf" class="btn btn-danger nextBtn btn-lg">Save as Draf</button>
-                {{-- <button type="button" id="finish" class="btn btn-primary nextBtn">Finish</button> --}}
             </div>
         </div>
 
@@ -621,37 +614,11 @@
             <hr>
 
             <div class="card-body">
-
-                {{-- <!-- <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="is_new" name="is_new"
-                        @if (isset($product) && $product->is_new == 1) checked @endif />
-                    <label class="form-check-label" for="status">New In</label>
-                </div> --> --}}
-
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" id="is_new"
                         name="is_new_arrivals" @if (isset($product) && $product->is_new_arrivals == 1) checked @endif />
                     <label class="form-check-label" for="is_new">New Arrivals</label>
                 </div>
-
-
-                {{-- <!-- <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="is_featured"
-                        name="is_featured" @if (isset($product) && $product->is_featured == 1) checked @endif />
-                    <label class="form-check-label" for="is_featured">Featured Products</label>
-                </div> -->
-
-                <!-- <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="status" name="trending"
-                        @if (isset($product) && $product->trending == 1) checked @endif />
-                    <label class="form-check-label" for="status">Trending Products</label>
-                </div> -->
-
-                <!-- <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="status"
-                        name="best_selling" @if (isset($product) && $product->best_selling == 1) checked @endif />
-                    <label class="form-check-label" for="status">Best Selling</label>
-                </div> --> --}}
 
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" id="status"
@@ -667,68 +634,6 @@
                 </div>
             </div>
             <hr>
-
-            {{-- @php
-                $selectedCategories = is_array(json_decode($product->category_id, true))
-                    ? json_decode($product->category_id, true)
-                    : [];
-                $selectedSubCategories = is_array(json_decode($product->sub_category_id, true))
-                    ? json_decode($product->sub_category_id, true)
-                    : [];
-
-                $selectedChildCategories = is_array(json_decode($product->child_category_id, true))
-                    ? json_decode($product->child_category_id, true)
-                    : [];
-            @endphp
-
-            <div class="card-body">
-                @if ($activeCategorie->category_type_id == 2)
-                    <div class="form-check">
-                        <input class="form-check-input main-cat-checkbox" type="checkbox"
-                            id="main_cat_{{ $activeCategorie->id }}" name="category_id[]"
-                            value="{{ $activeCategorie->id }}" data-product-detail-managers="{{ $activeCategorie->product_detail_manager ?? '' }}"
-                            {{ $activeCategorie->id ? 'checked' : '' }}
-                            onchange="toggleSubCategories({{ $activeCategorie->id }})">
-                        <label class="form-check-label" for="main_cat_{{ $activeCategorie->id }}">
-                            {{ $activeCategorie->name }}
-                        </label>
-                    </div>
-
-                    @if ($activeCategorie && $activeCategorie->children)
-                        <div id="subcategories_{{ $activeCategorie->id }}" class="ms-3">
-                            @foreach ($activeCategorie->children as $sub)
-                                <div class="form-check">
-                                    <input class="form-check-input sub-cat-checkbox" type="checkbox"
-                                        id="sub_cat_{{ $sub->id }}" name="sub_category_id[]"
-                                        value="{{ $sub->id }}" data-product-detail-managers="{{ $sub->product_detail_manager ?? '' }}" @checked(
-                                            $product->main_sub_category_id == $sub->id ||
-                                                (isset($selectedSubCategories) && in_array($sub->id, $selectedSubCategories)))
-                                        onchange="toggleChildCategories({{ $sub->id }})">
-                                    <label class="form-check-label" for="sub_cat_{{ $sub->id }}">
-                                        {{ $sub->name }}
-                                    </label>
-                                </div>
-                                @if ($sub->children)
-                                    <div id="childcategories_{{ $sub->id }}" class="ms-4">
-                                        @foreach ($sub->children as $child)
-                                            <div class="form-check">
-                                                <input class="form-check-input child-cat-checkbox" type="checkbox"
-                                                    id="child_cat_{{ $child->id }}" name="child_category_id[]"
-                                                    value="{{ $child->id }}" data-product-detail-managers="{{ $child->product_detail_manager ?? '' }}" @checked(
-                                                        $product->main_child_category_id == $child->id ||
-                                                            (isset($selectedChildCategories) && in_array($child->id, $selectedChildCategories)))>
-                                                <label class="form-check-label" for="child_cat_{{ $child->id }}">
-                                                    {{ $child->name }}
-                                                </label>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                @endif
-                            @endforeach
-                        </div>
-                    @endif
-                @endif
-            </div> --}}
             @php
             $selectedCategories = json_decode($product->category_id, true);
             $selectedCategories = is_array($selectedCategories) ? $selectedCategories : [];
@@ -743,8 +648,6 @@
         <div class="card-body">
 
             @foreach ($categories as $category)
-
-                {{-- MAIN CATEGORY --}}
                 <div class="form-check">
                     <input
                         class="form-check-input main-cat-checkbox"
@@ -834,98 +737,9 @@
                 <hr>
             @endforeach
         </div>
-
-            {{-- <div class="card-header mt-3 mb-3">
-                <div class="card-title">
-                    <h6>Collection</h6>
-                </div>
-            </div>
-            <hr> --}}
-
-            <!-- Add Code by mohit for multiple category selected -->
-            {{-- <div class="card-body">
-                @foreach ($categories as $category)
-                    @if ($category->category_type_id == 1)
-                        
-                        <div class="form-check">
-                            <input class="form-check-input main-cat-checkbox" type="checkbox"
-                                id="main_cat_{{ $category->id }}" name="category_id[]" value="{{ $category->id }}"
-                                data-product-detail-managers="{{ $category->product_detail_manager ?? '' }}"
-                                {{ in_array($category->id, $selectedCategories) ? 'checked' : '' }}
-                                onchange="toggleSubCategories({{ $category->id }})">
-                            <label class="form-check-label" for="main_cat_{{ $category->id }}">
-                                {{ $category->name }}
-                            </label>
-                        </div>
-
-                  
-                        <div id="subcategories_{{ $category->id }}" class="ms-3">
-                            @foreach ($category->children as $sub)
-                                <div class="form-check">
-                                    <input class="form-check-input sub-cat-checkbox" type="checkbox"
-                                        id="sub_cat_{{ $sub->id }}" name="sub_category_id[]"
-                                        value="{{ $sub->id }}"
-                                        data-product-detail-managers="{{ $sub->product_detail_manager ?? '' }}"
-                                        {{ in_array($sub->id, $selectedSubCategories) ? 'checked' : '' }}
-                                        onchange="toggleChildCategories({{ $sub->id }})">
-                                    <label class="form-check-label" for="sub_cat_{{ $sub->id }}">
-                                        {{ $sub->name }}
-                                    </label>
-                                </div>
-
-                         
-                                <div id="childcategories_{{ $sub->id }}"
-                                    class="ms-4 {{ in_array($sub->id, (array) $product_details->sub_category_id) ? '' : 'd-none' }}">
-                                    @foreach ($sub->children as $child)
-                                        <div class="form-check">
-                                            <input class="form-check-input child-cat-checkbox" type="checkbox"
-                                                id="child_cat_{{ $child->id }}" name="child_category_id[]"
-                                                value="{{ $child->id }}" data-product-detail-managers="{{ $child->product_detail_manager ?? '' }}"
-                                                {{ in_array($child->id, $selectedChildCategories) ? 'checked' : '' }}>
-                                            <label  class="form-check-label" for="child_cat_{{ $child->id }}">
-                                                {{ $child->name }}
-                                            </label>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
-                @endforeach
-            </div> --}}
-
-
-            <!-- End code by Mohit -->
-
-            <!-- <div class="card-header mt-3">
-                <div class="card-title">
-                    <h6>Tags</h6>
-                </div>
-            </div>
-            <hr> -->
-
             @php
                 $selectedTags = explode(',', $product->product_tags ?? '');
             @endphp
-            {{-- <!-- <div class="card-body">
-                <div class="row">
-                    <div class="col">
-                        <div class="form-group">
-                            <label for="tags"> </label>
-                            <select class="form-control product_select2" name="product_tags[]" id="tags"
-                                multiple>
-                                @foreach ($tags as $key => $tag)
-                                    <option value="{{ $key }}"
-                                        {{ in_array($key, $selectedTags) ? 'selected' : '' }}>
-                                        {{ $tag }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div> --> --}}
-
         </div>
     </div>
 </form>
@@ -945,7 +759,6 @@
                         <label class="form-label">Select Variant Value</label>
                         <select name="variant_value_id" id="variant_value_id" class="form-select">
                             <option value="">Select</option>
-                            <!-- JS will populate options here -->
                         </select>
                     </div>
                 </form>
@@ -987,88 +800,6 @@
     var productLimit = "{{ url('admin/product/update-product-variant-limit/') }}";
     window.attributes = @json($attributesData);
     window.preselectedAttributes = @json($preselectedAttributes);
-    // var productDetailManagerMap = @json(\App\Models\ProductDetailManager::get()->mapWithKeys(function($item) {
-    //     return [$item->id => \Illuminate\Support\Str::slug($item->section_name, '_')];
-    // })->toArray());
-    // var productDetailManagerFieldMap = {
-    //     short_description: ['short description', 'short_description'],
-    //     description: ['product description', 'description'],
-    //     specification: ['product specification', 'specification'],
-    //     product_details: ['product details', 'product_details'],
-    //     others: ['disclaimer', 'others', 'desclaimer'],
-    //     wash_care: ['dimensions', 'wash care', 'wash_care']
-    // };
-
-    // function normalizeManagerName(name) {
-    //     return name ? name.toString().trim().toLowerCase() : '';
-    // }
-
-    // function getSelectedProductDetailManagerIds() {
-    //     const ids = new Set();
-
-    //     document.querySelectorAll('input[type="checkbox"][data-product-detail-managers]').forEach(function (checkbox) {
-    //         if (!checkbox.checked) return;
-    //         const raw = checkbox.dataset.productDetailManagers || '';
-    //         raw.split(',').map(function (id) {
-    //             const trimmed = id.trim();
-    //             if (trimmed) ids.add(trimmed);
-    //         });
-    //     });
-
-    //     return Array.from(ids);
-    // }
-
-    // function getSelectedProductDetailManagerNames() {
-    //     return getSelectedProductDetailManagerIds()
-    //         .map(function (id) {
-    //             return productDetailManagerMap[id] || '';
-    //         })
-    //         .map(normalizeManagerName)
-    //         .filter(function (name) {
-    //             return name;
-    //         });
-    // }
-
-    // function updateProductDescriptionSection() {
-    //     const section = document.getElementById('productDescriptionSection');
-    //     if (!section) return;
-
-    //     const selectedNames = getSelectedProductDetailManagerNames();
-    //     const hasProductDetail = selectedNames.length > 0;
-
-    //     section.classList.toggle('d-none', !hasProductDetail);
-
-    //     section.querySelectorAll('[data-manager-field]').forEach(function (field) {
-    //         const key = field.dataset.managerField;
-    //         const fieldSlug = normalizeManagerName(field.dataset.managerSlug || '');
-    //         const aliases = productDetailManagerFieldMap[key] || [];
-    //         const shouldShow = selectedNames.some(function (name) {
-    //             return aliases.includes(name) || name === fieldSlug;
-    //         });
-    //         field.classList.toggle('d-none', !shouldShow);
-    //     });
-    // }
-
-    // function initProductDetailCkeditors() {
-    //     if (typeof CKEDITOR === 'undefined' || !CKEDITOR || !CKEDITOR.replace) return;
-
-    //     document.querySelectorAll('textarea.ck_content').forEach(function (textarea) {
-    //         if (!textarea.id) return;
-
-    //         if (CKEDITOR.instances[textarea.id]) {
-    //             return;
-    //         }
-
-    //         CKEDITOR.replace(textarea.id, {
-    //             enterMode: CKEDITOR.ENTER_BR,
-    //             allowedContent: true
-    //         });
-    //     });
-    // }
-
-    // $(document).on('change', 'input[type="checkbox"][data-product-detail-managers]', function () {
-    //     updateProductDescriptionSection();
-    // });
 </script>
 
 <script src="{{ asset('assets/js/product/add-product.js') }}"></script>
@@ -1119,8 +850,6 @@
                 }
             });
         }
-        //const row = $(this).closest('tr');
-        //calculateSellingModifyPrice(row);
     });
 
     $(document).ready(function() {
