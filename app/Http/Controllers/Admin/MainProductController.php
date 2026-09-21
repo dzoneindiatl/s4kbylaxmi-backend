@@ -82,7 +82,7 @@ class MainProductController extends Controller
         $productId = $request->product_id; 
         $type = $request->type; 
         if($product_type == 2){
-            if($type != "Collection"){
+            if($type != '1'){
                 $variantsData = CategoryVariant::with('variant:id,name')
                 ->where('category_id', $request->main_category_id)
                 ->get()
@@ -137,11 +137,12 @@ class MainProductController extends Controller
             ->unique('id')
             ->values();
       
-        $productDetailManagerIds = Category::where('id', $product->main_category_id)->value('product_detail_manager');
+        $productDetailManagerIds = Category::where('id', $product->main_category_id)->orWhere('id',$product->main_collection_id)->value('product_detail_manager');
         $productDetailManagerIds = explode(',', $productDetailManagerIds);
         $productDetailData = ProductDetailManager::whereIn('id',$productDetailManagerIds)->orderBy('order','asc')->get(); 
         $preselectedAttributes = ProductAttribute::where('product_id', $productId)->get();
-        $categories = Category::with('children.children')->whereNull('parent_id')->where('is_deleted', 0)->get();
+        $categories = Category::where('category_type_id',2)->with('children.children')->whereNull('parent_id')->where('is_deleted', 0)->get();
+        $collections = Category::where('category_type_id',1)->where('is_active',1)->where('is_deleted',0)->get(); 
         $activeCategorie = Category::with('children.children')->where('is_deleted', 0)->whereNull('parent_id')->where('id', $product->main_category_id)->first(); 
         $variantReleatedProduct = $this->getVariantReleatedProduct($productId);  
         
@@ -154,7 +155,8 @@ class MainProductController extends Controller
             "countries"                 =>  Country::where('is_active', 1)->get(),
             'product'                   =>  $product,
             'preselectedAttributes'     =>  $preselectedAttributes,
-            'productDetailSections'         =>  $productDetailData
+            'productDetailSections'         =>  $productDetailData,
+            'collections'               => $collections,
         ])->render();
     }
 

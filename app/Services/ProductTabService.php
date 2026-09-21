@@ -25,6 +25,7 @@ class ProductTabService
             ? Product::findOrFail($data['product_id'])
             : new Product(); 
         $product->product_type         = $data['product_type'];
+        $product->cat_collection_type = $data['cat_collection_type']; 
         $product->main_category_id     = $data['main_category_id'];
         $product->main_sub_category_id = $data['main_sub_category_id'] ?? null;
         $product->main_child_category_id  = $data['main_child_cate_id'] ?? null;
@@ -194,6 +195,8 @@ class ProductTabService
                 'sub_category_id' => !empty($data['sub_category_id']) ? json_encode($data['sub_category_id']) : '',
                 'child_category_id' => !empty($data['child_category_id']) ? json_encode($data['child_category_id']) : '',
 
+                //Related Collection 
+                'collection_ids' => !empty($data['collection_ids'])? json_encode($data['collection_ids']) : '',
                 // Related Products
                 'related_product_categores_id' => $data['categorys_id'] ?? '',
                 'related_product_subcategory_id' => $data['subcategory_id'] ?? '',

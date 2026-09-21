@@ -5,7 +5,6 @@
                 <input type="hidden" id="product_id" value="{{ $product->id }}">
             @endif
 
-            {{-- Product Type --}}
             <div class="mb-3">
                 <label class="form-label">Product Type <span class="text-danger">*</span></label>
                 <select class="form-control select2 @error('product_type') is-invalid @enderror product_type_selectbox"
@@ -23,8 +22,8 @@
                 <label for="form-label">Category/Collection <span class="text-danger">*</span></label>
                 <select name="type" class="form-control select2" id="type" onchange="handleCategoryCollectionType()">
                     <option value="">Select</option>
-                    <option value="Category">Category</option>
-                    <option value="Collection">Collection</option>
+                    <option value="2" @if(isset($product->cat_collection_type)) {{ $product->cat_collection_type == '2' ? 'selected' : '' }} @endif>Category</option>
+                    <option value="1" @if(isset($product->cat_collection_type)) {{ $product->cat_collection_type == '1' ? 'selected' : '' }} @endif>Collection</option>
                 </select>
             </div>
 
@@ -33,7 +32,7 @@
                 <select name="product_collection_id" class="form-control select2" id="product_collection_id">
                     <option value="">Select Collection</option>
                     @foreach($productCollection as $collections)
-                        <option value="{{ $collections->id }}" {{ old('product_collection_id',$product->collection_ids ?? '') == $collections->id ? 'selected' : '' }} >{{ $collections->name }}</option>
+                        <option value="{{ $collections->id }}" {{ old('product_collection_id',$product->main_collection_id ?? '') == $collections->id ? 'selected' : '' }} >{{ $collections->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -141,7 +140,7 @@
 
         $('#subCategoryBox').addClass('d-none');
         $('#subChildCategoryBox').addClass('d-none');
-        if (type === 'Collection') {
+        if (type === '1') {
             $('#collectionBox').removeClass('d-none');
             $('#categoryBox').addClass('d-none');
             $('#subCategoryBox').addClass('d-none');
@@ -168,10 +167,15 @@
                         $('#variantContainer').html('');
                     }
                 });
+                 const existingCollectionId = $('#product_collection_id').val();
+
+                    if (existingCollectionId) {
+                        getVariantData();
+                    }
             return;
         }
 
-        if (type === 'Category') {
+        if (type === '2') {
 
             $('#collectionBox').addClass('d-none');
             $('#categoryBox').removeClass('d-none');
@@ -410,6 +414,7 @@
 
         formData.append('_token', '{{ csrf_token() }}');
         formData.append('product_type', $('#product_type').val());
+        formData.append('cat_collection_type',$('#type').val()); 
         formData.append('main_category_id', $('#prdct_category_id').val());
         formData.append('main_sub_category_id', $('#prdct_sub_category_id').val());
         formData.append('main_child_cate_id', $('#prdct_child_category_id').val());

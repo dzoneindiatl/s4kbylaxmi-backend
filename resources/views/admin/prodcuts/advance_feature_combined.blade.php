@@ -635,108 +635,138 @@
             </div>
             <hr>
             @php
-            $selectedCategories = json_decode($product->category_id, true);
-            $selectedCategories = is_array($selectedCategories) ? $selectedCategories : [];
+                $selectedCategories = json_decode($product->category_id, true);
+                $selectedCategories = is_array($selectedCategories) ? $selectedCategories : [];
 
-            $selectedSubCategories = json_decode($product->sub_category_id, true);
-            $selectedSubCategories = is_array($selectedSubCategories) ? $selectedSubCategories : [];
+                $selectedSubCategories = json_decode($product->sub_category_id, true);
+                $selectedSubCategories = is_array($selectedSubCategories) ? $selectedSubCategories : [];
 
-            $selectedChildCategories = json_decode($product->child_category_id, true);
-            $selectedChildCategories = is_array($selectedChildCategories) ? $selectedChildCategories : [];
-        @endphp
+                $selectedChildCategories = json_decode($product->child_category_id, true);
+                $selectedChildCategories = is_array($selectedChildCategories) ? $selectedChildCategories : [];
+            @endphp
 
-        <div class="card-body">
+            <div class="card-body">
 
-            @foreach ($categories as $category)
-                <div class="form-check">
-                    <input
-                        class="form-check-input main-cat-checkbox"
-                        type="checkbox"
-                        id="main_cat_{{ $category->id }}"
-                        name="category_id[]"
-                        value="{{ $category->id }}"
-                        data-product-detail-managers="{{ $category->product_detail_manager ?? '' }}"
-                        @checked(
-                            $product->main_category_id == $category->id ||
-                            in_array($category->id, $selectedCategories)
-                        )
-                        onchange="toggleSubCategories({{ $category->id }})"
-                    >
+                @foreach ($categories as $category)
+                    <div class="form-check">
+                        <input
+                            class="form-check-input main-cat-checkbox"
+                            type="checkbox"
+                            id="main_cat_{{ $category->id }}"
+                            name="category_id[]"
+                            value="{{ $category->id }}"
+                            data-product-detail-managers="{{ $category->product_detail_manager ?? '' }}"
+                            @checked(
+                                $product->main_category_id == $category->id ||
+                                in_array($category->id, $selectedCategories)
+                            )
+                            onchange="toggleSubCategories({{ $category->id }})"
+                        >
 
-                    <label
-                        class="form-check-label"
-                        for="main_cat_{{ $category->id }}"
-                    >
-                        {{ $category->name }}
-                    </label>
-                </div>
-                @if ($category->children->count())
-
-                    <div
-                        id="subcategories_{{ $category->id }}"
-                        class="ms-4"
-                    >
-
-                        @foreach ($category->children as $sub)
-
-                            <div class="form-check">
-
-                                <input
-                                    class="form-check-input sub-cat-checkbox"
-                                    type="checkbox"
-                                    id="sub_cat_{{ $sub->id }}"
-                                    name="sub_category_id[]"
-                                    value="{{ $sub->id }}"
-                                    data-product-detail-managers="{{ $sub->product_detail_manager ?? '' }}"
-                                    @checked(
-                                        $product->main_sub_category_id == $sub->id ||
-                                        in_array($sub->id, $selectedSubCategories)
-                                    )
-                                    onchange="toggleChildCategories({{ $sub->id }})"
-                                >
-
-                                <label
-                                    class="form-check-label"
-                                    for="sub_cat_{{ $sub->id }}"
-                                >
-                                    {{ $sub->name }}
-                                </label>
-                            </div>
-                            @if ($sub->children->count())
-                                <div
-                                    id="childcategories_{{ $sub->id }}"
-                                    class="ms-5"
-                                >
-                                    @foreach ($sub->children as $child)
-                                        <div class="form-check">
-                                            <input
-                                                class="form-check-input child-cat-checkbox"
-                                                type="checkbox"
-                                                id="child_cat_{{ $child->id }}"
-                                                name="child_category_id[]"
-                                                value="{{ $child->id }}"
-                                                data-product-detail-managers="{{ $child->product_detail_manager ?? '' }}"
-                                                @checked(
-                                                    $product->main_child_category_id == $child->id ||
-                                                    in_array($child->id, $selectedChildCategories)
-                                                )
-                                            >
-                                            <label
-                                                class="form-check-label"
-                                                for="child_cat_{{ $child->id }}"
-                                            >
-                                                {{ $child->name }}
-                                            </label>
-                                        </div>
-                                    @endforeach
-                                </div>
-                            @endif
-                        @endforeach
+                        <label
+                            class="form-check-label"
+                            for="main_cat_{{ $category->id }}"
+                        >
+                            {{ $category->name }}
+                        </label>
                     </div>
-                @endif
-                <hr>
-            @endforeach
-        </div>
+                    @if ($category->children->count())
+
+                        <div
+                            id="subcategories_{{ $category->id }}"
+                            class="ms-4"
+                        >
+
+                            @foreach ($category->children as $sub)
+
+                                <div class="form-check">
+
+                                    <input
+                                        class="form-check-input sub-cat-checkbox"
+                                        type="checkbox"
+                                        id="sub_cat_{{ $sub->id }}"
+                                        name="sub_category_id[]"
+                                        value="{{ $sub->id }}"
+                                        data-product-detail-managers="{{ $sub->product_detail_manager ?? '' }}"
+                                        @checked(
+                                            $product->main_sub_category_id == $sub->id ||
+                                            in_array($sub->id, $selectedSubCategories)
+                                        )
+                                        onchange="toggleChildCategories({{ $sub->id }})"
+                                    >
+
+                                    <label
+                                        class="form-check-label"
+                                        for="sub_cat_{{ $sub->id }}"
+                                    >
+                                        {{ $sub->name }}
+                                    </label>
+                                </div>
+                                @if ($sub->children->count())
+                                    <div
+                                        id="childcategories_{{ $sub->id }}"
+                                        class="ms-5"
+                                    >
+                                        @foreach ($sub->children as $child)
+                                            <div class="form-check">
+                                                <input
+                                                    class="form-check-input child-cat-checkbox"
+                                                    type="checkbox"
+                                                    id="child_cat_{{ $child->id }}"
+                                                    name="child_category_id[]"
+                                                    value="{{ $child->id }}"
+                                                    data-product-detail-managers="{{ $child->product_detail_manager ?? '' }}"
+                                                    @checked(
+                                                        $product->main_child_category_id == $child->id ||
+                                                        in_array($child->id, $selectedChildCategories)
+                                                    )
+                                                >
+                                                <label
+                                                    class="form-check-label"
+                                                    for="child_cat_{{ $child->id }}"
+                                                >
+                                                    {{ $child->name }}
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            @endforeach
+                        </div>
+                    @endif
+                    <hr>
+                @endforeach
+            </div>
+
+            <div class="card-header mb-3 mt-3">
+                <div class="card-title">
+                    <h6>Collections</h6>
+                </div>
+            </div>
+            <hr> 
+            @php 
+                $selectedCollections = json_decode($product->collection_ids,true); 
+                $selectedCollections = is_array($selectedCollections) ? $selectedCollections : []; 
+            @endphp
+            <div class="card-body">
+                @foreach($collections as $col)
+                    <div class="form-check">
+                        <input
+                            class="form-check-input main-cat-checkbox"
+                            type="checkbox"
+                            id="collection_id"
+                            name="collection_ids[]"
+                            value="{{ $col->id }}"
+                            @checked(
+                                $product->main_collection_id == $col->id ||
+                                in_array($col->id, $selectedCollections)
+                            )>
+                        <label class="form-check-label"for="main_collection_id">{{ $col->name }}</label>
+                    </div>
+                @endforeach 
+            </div>
+
+
             @php
                 $selectedTags = explode(',', $product->product_tags ?? '');
             @endphp
