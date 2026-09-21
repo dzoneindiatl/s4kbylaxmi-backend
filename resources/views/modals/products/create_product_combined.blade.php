@@ -18,46 +18,45 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
-            <div class="mb-3">
+
+            <div class="mb-3" >
+                <label for="form-label">Category/Collection <span class="text-danger">*</span></label>
+                <select name="type" class="form-control select2" id="type" onchange="handleCategoryCollectionType()">
+                    <option value="">Select</option>
+                    <option value="Category">Category</option>
+                    <option value="Collection">Collection</option>
+                </select>
+            </div>
+
+            <div class="mb-3 d-none" id="collectionBox">
                 <label for="" class="form-label">Product Collection</label>
                 <select name="product_collection_id" class="form-control select2" id="product_collection_id">
                     <option value="">Select Collection</option>
                     @foreach($productCollection as $collections)
-                        <option value="{{ $collections->id }}" {{ old('product_collection_id',$product->collection_ids ?? '') == $collections->id ? 'selected' : '' }} >{{ $collections->title }}</option>
+                        <option value="{{ $collections->id }}" {{ old('product_collection_id',$product->collection_ids ?? '') == $collections->id ? 'selected' : '' }} >{{ $collections->name }}</option>
                     @endforeach
                 </select>
             </div>
 
-            {{-- Main Category --}}
-            <div class="mb-3">
-                @php
-                //prx($categories->toArray());
-                // $grouped = $categories->groupBy('category_type_id');
-                // $cats = $categories->toArray();
-                // $categories = !empty($cats[2])?$cats[2]:[];
-                // $collections = !empty($cats[1])?$cats[1]:[];
-                @endphp
+            <div class="mb-3 d-none" id="categoryBox">
                 <label class="form-label">Category <span class="text-danger">*</span></label>
                 <select class="form-control select2 @error('main_category_id') is-invalid @enderror"
                         name="main_category_id" id="prdct_category_id"
                         onchange="loadSubCategories()" required>
                     <option value="">Select Category</option>
-                    <optgroup label="Category">
                         @foreach ($categories as $category)
                             <option value="{{ $category['id'] }}"
                                 {{ old('main_category_id', $product->main_category_id ?? '') == $category['id'] ? 'selected' : '' }}>
                                 {{ $category['name'] }}
                             </option>
                         @endforeach
-                    </optgroup>
                 </select>
                 @error('main_category_id')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
 
-            {{-- Subcategory --}}
-            <div class="mb-3 subCategorieHide d-none">
+            <div class="mb-3 d-none" id="subCategoryBox">
                 <label class="form-label">SubCategory <span class="text-danger">*</span></label>
                 <select name="main_sub_category_id" id="prdct_sub_category_id"
                         class="form-control select2" onchange="loadChildCategories()">
@@ -65,14 +64,14 @@
                 </select>
             </div>
 
-            {{-- Child Category --}}
-            <div class="mb-3 childCategoryHide d-none">
+            <div class="mb-3 d-none" id="subChildCategoryBox">
                 <label class="form-label">Child Category <span class="text-danger">*</span></label>
                 <select name="main_child_cate_id" id="prdct_child_category_id"
                         class="form-control select2" onchange="getVariantData()">
                     <option value="">Select Child Category</option>
                 </select>
             </div>
+
             <div id="variantContainer"></div>
            
             <div class="mb-3 text-end">
@@ -102,25 +101,105 @@
 {{-- Safe JS block --}}
 <script>
 (function () {
-    // // Active step 1 linktab &  stepdiv 
-    // $(".tab-pane").removeClass("active");
-    // $("#tab1").addClass("active");
 
-    // $(".nav-link").removeClass("active");
-    // $('#step1').addClass("active");
-
-    // Guard against redeclaration
+    // Guard  const existingType = $('#type').val();
     window.selectorsData = window.selectorsData || {
         main: '#prdct_category_id',
         sub: '#prdct_sub_category_id',
         child: '#prdct_child_category_id',
     };
 
- window.preselected = window.preselected || {
-    sub: @json($product['main_sub_category_id'] ?? null),
-    child: @json($product['main_child_category_id'] ?? null)
-};
+    window.preselected = window.preselected || {
+        sub: @json($product['main_sub_category_id'] ?? null),
+        child: @json($product['main_child_category_id'] ?? null)
+    };
 
+    window.resetCategoryFields = function () {
+
+        $('#subCategoryBox').addClass('d-none');
+        $('#subChildCategoryBox').addClass('d-none');
+
+        populateSelect(
+            selectorsData.sub,
+            [],
+            "Subcategory"
+        );
+
+        populateSelect(
+            selectorsData.child,
+            [],
+            "Child Category"
+        );
+
+        $('#variantContainer').html('');
+    };
+
+    window.handleCategoryCollectionType = function () {
+
+        const type = $('#type').val();
+        $('#variantContainer').html('');
+
+        $('#subCategoryBox').addClass('d-none');
+        $('#subChildCategoryBox').addClass('d-none');
+        if (type === 'Collection') {
+            $('#collectionBox').removeClass('d-none');
+            $('#categoryBox').addClass('d-none');
+            $('#subCategoryBox').addClass('d-none');
+            $('#subChildCategoryBox').addClass('d-none');
+            $('#prdct_category_id').val('').trigger('change.select2');
+            populateSelect(
+                selectorsData.sub,
+                [],
+                "Subcategory"
+            );
+
+            populateSelect(
+                selectorsData.child,
+                [],
+                "Child Category"
+            );
+            $('#product_collection_id')
+                .off('change.collectionVariant')
+                .on('change.collectionVariant', function () {
+                    const collectionId = $(this).val();
+                    if (collectionId) {
+                        getVariantData();
+                    } else {
+                        $('#variantContainer').html('');
+                    }
+                });
+            return;
+        }
+
+        if (type === 'Category') {
+
+            $('#collectionBox').addClass('d-none');
+            $('#categoryBox').removeClass('d-none');
+            $('#product_collection_id').val('').trigger('change.select2');
+            if ($('#prdct_category_id').val()) {
+                loadSubCategories();
+            }
+            return;
+        }
+
+        $('#collectionBox').addClass('d-none');
+        $('#categoryBox').addClass('d-none');
+
+        $('#product_collection_id').val('').trigger('change.select2');
+        $('#prdct_category_id').val('').trigger('change.select2');
+
+        populateSelect(
+            selectorsData.sub,
+            [],
+            "Subcategory"
+        );
+
+        populateSelect(
+            selectorsData.child,
+            [],
+            "Child Category"
+        );
+    };
     window.initSelect2 = function(force = false) {
         $('.select2').each(function () {
             const $el = $(this);
@@ -176,55 +255,129 @@
         $el.select2({ width: '100%', placeholder });
     };
 
-    window.loadSubCategories = function() {
+    window.loadSubCategories = function () {
         const catId = $(selectorsData.main).val();
+        $('#subCategoryBox').addClass('d-none');
+        $('#subChildCategoryBox').addClass('d-none');
+        $('#variantContainer').html('');
+        populateSelect(
+            selectorsData.sub,
+            [],
+            "Subcategory"
+        );
 
-        ajaxCall("{{ route('admin-product-ajax-getrelatedsubcategories') }}", { category_ids: catId }, res => {           
-            if (res.success && res.subcategories.length) {
-                populateSelect(selectorsData.sub, res.subcategories, "Subcategory", preselected.sub);
-                $('.subCategorieHide').removeClass('d-none');
-                populateSelect(selectorsData.child, [], "Child Category");
-                $('.childCategoryHide').addClass('d-none');
-                if (preselected.sub) {
-                    loadChildCategories(); // load child if sub is preselected
-                }
-            } else {
-                $('.subCategorieHide, .childCategoryHide').addClass('d-none');
-                populateSelect(selectorsData.sub, [], "Subcategory");
-                populateSelect(selectorsData.child, [], "Child Category");
-            }
-        });
-    }
+        populateSelect(
+            selectorsData.child,
+            [],
+            "Child Category"
+        );
 
-    window.loadChildCategories = function() {
-        const subCatId = $(selectorsData.sub).val();
-        ajaxCall("{{ route('admin-product-ajax-getchildcategory') }}", { subctgids: subCatId }, res => {
-            console.log((res.childcat));
-            if (res.success && res.childcat.length) {
-                populateSelect(selectorsData.child, res.childcat, "Child Category", preselected.child);
-                $('.childCategoryHide').removeClass('d-none');
-                if (preselected.child) {
+        if (!catId) {
+            return;
+        }
+
+        ajaxCall(
+            "{{ route('admin-product-ajax-getrelatedsubcategories') }}",
+            {
+                category_ids: catId
+            },
+            function (res) {
+
+                if (res.success && res.subcategories.length) {
+                    populateSelect(
+                        selectorsData.sub,
+                        res.subcategories,
+                        "Subcategory",
+                        preselected.sub
+                    );
+
+                    $('#subCategoryBox').removeClass('d-none');
+                    if (preselected.sub) {
+                        loadChildCategories();
+                    }
+
+                } else {
+
+                    $('#subCategoryBox').addClass('d-none');
+
+                    populateSelect(
+                        selectorsData.sub,
+                        [],
+                        "Subcategory"
+                    );
+
+                    populateSelect(
+                        selectorsData.child,
+                        [],
+                        "Child Category"
+                    );
+
+                    // Directly load variants
                     getVariantData();
                 }
-            } else {
-                $('.childCategoryHide').addClass('d-none');
-                populateSelect(selectorsData.child, [], "Child Category");
-                getVariantData();
             }
-        });
-    }
+        );
+    };
+
+    window.loadChildCategories = function () {
+        const subCatId = $(selectorsData.sub).val();
+        $('#subChildCategoryBox').addClass('d-none');
+        populateSelect(
+            selectorsData.child,
+            [],
+            "Child Category"
+        );
+        $('#variantContainer').html('');
+        if (!subCatId) {
+            return;
+        }
+        ajaxCall(
+            "{{ route('admin-product-ajax-getchildcategory') }}",
+            {
+                subctgids: subCatId
+            },
+            function (res) {
+                console.log('Child Categories:', res.childcat);
+                if (res.success && res.childcat.length) {
+                    populateSelect(
+                        selectorsData.child,
+                        res.childcat,
+                        "Child Category",
+                        preselected.child
+                    );
+
+                    $('#subChildCategoryBox').removeClass('d-none');
+                    if (preselected.child) {
+                        getVariantData();
+                    }
+
+                } else {
+                    $('#subChildCategoryBox').addClass('d-none');
+                    populateSelect(
+                        selectorsData.child,
+                        [],
+                        "Child Category"
+                    );
+                    getVariantData();
+                }
+            }
+        );
+    };
 
     window.getVariantData = function() {
         var subchildCategory = $('#prdct_child_category_id').val();
         var productType = $('#product_type').val(); 
         const $btn = $('.nextBtn'); 
         const originalHtml = $btn.html(); 
+         const type = $('#type').val();
         const formData = {
              _token: '{{ csrf_token() }}',
             product_type: $('#product_type').val(),
+            type: type,
             main_category_id: $('#prdct_category_id').val(),
             main_sub_category_id: $('#prdct_sub_category_id').val(),
-            main_child_cate_id : subchildCategory
+            main_child_cate_id : subchildCategory,
+            main_collection_id : $('#product_collection_id').val(), 
         }; 
         const productId = $('#product_id').val();
         if (productId) {
@@ -317,6 +470,11 @@
 
     $(document).ready(() => {
         initSelect2(true);
+        const existingType = $('#type').val();
+
+        if (existingType) {
+            handleCategoryCollectionType();
+        }
 
         console.log("variant record------",$(selectorsData.main).val());
         if ($(selectorsData.main).val()) {
@@ -329,14 +487,14 @@
             $(this).removeClass('is-invalid');
         });
 
-       $('.modal').on('shown.bs.modal', function () {
-        setTimeout(() => {
-            initSelect2(true);
-            if ($(selectorsData.main).val()) {
-                loadSubCategories(); // Also run on modal open
-            }
-        }, 100);
-    });
+        $('.modal').on('shown.bs.modal', function () {
+            setTimeout(() => {
+                initSelect2(true);
+                if ($(selectorsData.main).val()) {
+                    loadSubCategories(); // Also run on modal open
+                }
+            }, 100);
+        });
     });
 })();
 </script>

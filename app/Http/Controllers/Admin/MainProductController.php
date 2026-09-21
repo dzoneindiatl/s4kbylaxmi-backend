@@ -58,15 +58,15 @@ class MainProductController extends Controller
             $id = decrypt($token);
             $product = Product::FindOrFail($id);
         }
-        $categories = Category::where('is_deleted', 0)->whereNull('parent_id')->where("is_active",1)->get();
-        $productCollection = ProductCollection::where("is_active",1)->whereNull('deleted_at')->get(); 
+        $categories = Category::where('category_type_id',2)->where('is_deleted', 0)->whereNull('parent_id')->where("is_active",1)->get();
+        $productCollection = Category::where('category_type_id',1)->where("is_active",1)->get(); 
         
 
         $productDetailManagers = ProductDetailManager::get();
         return view('admin.prodcuts.add-new-product', compact('categories', "product", "productDetailManagers","productCollection"));
     }
 
-    public function saveStep1(ProductStep1 $request, ProductTabService $service)
+    public function saveStep1(Request $request, ProductTabService $service)
     { 
         $product = $service->step1($request->all());
         return response()->json([
@@ -80,13 +80,25 @@ class MainProductController extends Controller
     public function getProductCategoryVariant(Request $request){ 
         $product_type = $request->product_type; 
         $productId = $request->product_id; 
-        $variantsData = CategoryVariant::with('variant:id,name')
-            ->where('category_id', $request->main_category_id)
-            ->get()
-            ->pluck('variant')
-            ->unique('id')
-            ->values();
-        
+        $type = $request->type; 
+        if($product_type == 2){
+            if($type != "Collection"){
+                $variantsData = CategoryVariant::with('variant:id,name')
+                ->where('category_id', $request->main_category_id)
+                ->get()
+                ->pluck('variant')
+                ->unique('id')
+                ->values();
+            }
+            else{
+                $variantsData = CategoryVariant::with('variant:id,name')
+                ->where('category_id', $request->main_collection_id)
+                ->get()
+                ->pluck('variant')
+                ->unique('id')
+                ->values();
+            }
+
             $selectedVariants = ProductVariant::where('product_id', $productId)
             ->with('variantValues')
             ->get()
@@ -98,20 +110,21 @@ class MainProductController extends Controller
             });
            
             $html = view('modals.products.create_variant_combined', [
-            'variantsData' => $variantsData,
-            'product_id' => $productId,
-            'product_type' => $product_type,
-            "selectedVariants" => $selectedVariants,
-        ])->render();
-
-        return response()->json([
-            'success' => true,
-            'html' => $html,
-            'data' => [
                 'variantsData' => $variantsData,
-                'selectedVariants' => $selectedVariants
-            ]
-        ]);
+                'product_id' => $productId,
+                'product_type' => $product_type,
+                "selectedVariants" => $selectedVariants,
+            ])->render();
+
+            return response()->json([
+                'success' => true,
+                'html' => $html,
+                'data' => [
+                    'variantsData' => $variantsData,
+                    'selectedVariants' => $selectedVariants
+                ]
+            ]);
+        }
     }
     public function previousStep3($productId)
     {   

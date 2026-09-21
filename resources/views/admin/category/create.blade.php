@@ -58,7 +58,7 @@
                     @if(isset($pageTitle) && $pageTitle === 'Categories')
                     <div class="row">
                         <div class="col-xl-6">
-                            {{-- <div class="card-body p-0">
+                            <div class="card-body p-0">
                                 <div class="mb-3">
                                     <label for="select_category_type" class="form-label">
                                         <span class="text-danger">*</span>Select Category Type
@@ -80,7 +80,7 @@
                                     </div>
                                     @enderror
                                 </div>
-                            </div> --}}
+                            </div>
                         </div>
                     </div>
                     @endif

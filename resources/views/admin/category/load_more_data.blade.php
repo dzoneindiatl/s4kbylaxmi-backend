@@ -8,7 +8,7 @@
             </td>
 
             <td>{{ $result->name ?? 'N/A' }}</td>
-            {{-- <td>{{ $result->category_type_id == 1 ? 'Collection' : 'Category' }}</td> --}}
+            <td>{{ $result->category_type_id == 1 ? 'Collection' : 'Category' }}</td>
             <td>
                 <label class="switch">
                     <input type="checkbox" class="toggle-status" data-id="{{ $result->id }}" data-field="is_featured"

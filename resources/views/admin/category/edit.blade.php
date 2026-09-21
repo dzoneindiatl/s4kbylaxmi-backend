@@ -88,7 +88,7 @@
                 </div>
                 <div class="card-body">
                     @if(isset($pageTitle) && $pageTitle == 'Categories')
-                    {{-- <div class="row">
+                    <div class="row">
                         <div class="col-xl-6">
                             <div class="card-body p-0">
                                 <div class="mb-3">
@@ -111,7 +111,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
                     @endif
 
                 
@@ -197,18 +197,6 @@
                             </div>
                             @endif
                         </div>
-                        <!-- <div class="col-xl-6 mb-3">
-                            <label for="thumbnail_image" class="form-label">Thumbnail Image Width</label>
-                            <input type="text" class="form-control " id="width" name="width"
-                                value="{{ $category->width }}">
-
-                        </div>
-                        <div class="col-xl-6 mb-3">
-                            <label for="thumbnail_image" class="form-label">Thumbnail Image Height</label>
-                            <input type="text" class="form-control " id="height" name="height"
-                                value="{{ $category->height }}">
-
-                        </div> -->
                         <div class="col-xl-6 mb-3">
                             <label for="video" class="form-label"><span class="text-danger"> </span>Video</label>
                             <input type="file" class="form-control @error('video') is-invalid @enderror" id="video"
