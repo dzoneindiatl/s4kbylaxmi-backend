@@ -34,214 +34,131 @@
                         Create Size Chart
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-xl-6">
-                            <div class="card-body p-0">
-                                <div class="mb-3">
-                                    <label for="country_id" class="form-label"><span class="text-danger">* </span>Country</label>
-                                    <select class="js-example-placeholder-single js-states form-control" name="country_id">
-                                        @forelse ($countries as $country)
-                                        <option value="{{ $country['id'] }}" {{$country['id']=='102' ? 'selected' : ""}}>{{ $country['name'] }}</option>
-                                        @empty
-                                        <option value="" selected>No Data found</option>
-                                        @endforelse
-                                    </select>
-                                    @if ($errors->has('country_id'))
-                                    <div class="invalid-feedback">
-                                        {{ $errors->first('country_id') }}
-                                    </div>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="card-body p-0">
-                                <div class="mb-3">
-                                    <label for="name" class="form-label"><span class="text-danger">* </span>Size chart Name</label>
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                        id="name" name="name" placeholder="Enter Name">
-                                    @if ($errors->has('name'))
-                                    <div class="invalid-feedback">
-                                        {{ $errors->first('name') }}
-                                    </div>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        <!-- <div class="col-xl-12 mb-3">
-                            <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control @error('title') is-invalid @enderror" name="description" id="description" cols="30" rows="5">{!! isset($size_charts->description) ? $size_charts->description: old('description') !!}</textarea>
-                            @if ($errors->has('description'))
-                            <div class=" invalid-feedback">
-                                {{ $errors->first('description') }}
-                            </div>
-                            @endif
-                        </div> -->
-                    </div>
-                </div>
             </div>
-           
-            <div class="card custom-card">
-
-                <div class="card-header">
-
-                    <div class="card-title">
-
-                        Assign to
-
-                    </div>
-
-                </div>
-
-                <div class="card-body" id="category-section">
-
+            <div id="collapseSizeChart" aria-labelledby="headingSizeChart" data-bs-parent="#categoryAccordion">
+                <div class="accordion-body">
                     <div class="row">
-                        <div class="col-xl-4" id="category">
-
-                            <div class="card-body p-0">
-
-                                <div class="mb-3">
-
-                                    <label for="category" class="form-label"><span class="text-danger">*
-                                        </span>Category</label>
-
-                                    <select class="form-control @error('category_id') is-invalid @enderror" name="category_id" id="prdct_category_id" onchange="getRelatedSubCategories();">
-                                        <option value="">None</option>
-                                        @forelse ($categories as $category)
-                                        <option value="{{ $category->id }}" {{(old('category_id') == $category->id) ? 'selected' : ''}}>
-                                            {{ $category->name }}
-                                        </option>
-                                        @empty
-                                        <option value="">No Data found</option>
-                                        @endforelse
-                                    </select>
-                                    <div class="invalid-feedback" id="categoryidError">
-                                        {{ $errors->first('prdct_category_id') }}
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="col-xl-4" style="display: none;" id="sub_category">
-
-                            <div class="card-body p-0">
-
-                                <div class="mb-3">
-
-                                    <label for="sub_category_id" class="form-label">Subcategory</label>
-
-                                    <select name="sub_category_id" id="prdct_sub_category_id" class="js-example-placeholder-single js-states form-control" onchange="getchildcategory();">
-                                        <option value="">Select Subcategory</option>
-                                        @if(isset($product->category->parentcategory->parent_id))
-
-                                        <option value="{{$product->category->parentcategory->id}}" selected>{{$product->category->parentcategory->name}}</option>
-
-                                        @elseif(isset($product->category->parent_id))
-
-                                        <option value="{{$product->category->id}}" selected>{{$product->category->name}}</option>
-
-                                        @endif
-                                    </select>
-
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="col-xl-4" style="display: none;" id="child_category">
-                            <div class="card-body p-0">
-                                <div class="mb-3">
-                                    <label for="child_category_id" class="form-label">Child Category</label>
-                                    <select name="child_category_id" id="prdct_child_category_id" class="js-example-placeholder-single js-states form-control">
-                                        <option value="">Select Child category</option>
-                                        @if(isset($product->category->parentcategory->parent_id))
-                                        <option value="{{$product->category->parentcategory->parent_id}}" selected>
-                                            @foreach($categories as $category)
-                                            {{(isset($product->category->parentcategory->parent_id) && $product->category->parentcategory->parent_id == $category->id) ? $product->category->name : ''}}
-                                            @endforeach
-                                        </option>
-                                        @endif
-                                    </select>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-            <!-- end category subcategory childcategory assign -->
-            <div class="card custom-card">
-                <div class="card-header">
-                    <div class="card-title">
-                    Description
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row">                        
                         <div class="col-xl-6 mb-3">
-                            <label for="description" class="form-label">Centimeter Description</label>
-                            <textarea class="form-control @error('title') is-invalid @enderror" name="centimeter_details" id="centimeter_details" cols="50" rows="7">{!! isset($size_charts->centimeter_details) ? $size_charts->centimeter_details: old('centimeter_details') !!}</textarea>
-                            @if ($errors->has('centimeter_details'))
-                            <div class=" invalid-feedback">
-                                {{ $errors->first('centimeter_details') }}
-                            </div>
-                            @endif
+                            <label for="chart_title" class="form-label">Chart Title</label>
+                            <input type="text" class="form-control" id="chart_title" name="chart_title" placeholder="Enter Chart Title" value="{{ old('chart_title', $chart_content->title ?? '') }}">
                         </div>
                         <div class="col-xl-6 mb-3">
-                            <label for="inch_details" class="form-label">INCH Description</label>
-                            <textarea class="form-control @error('title') is-invalid @enderror" name="inch_details" id="inch_details" cols="50" rows="7">{!! isset($size_charts->inch_details) ? $size_charts->inch_details: old('inch_details') !!}</textarea>
-                            @if ($errors->has('inch_details'))
-                            <div class=" invalid-feedback">
-                                {{ $errors->first('inch_details') }}
+                            <label for="chart_format" class="form-label">Chart Format</label>
+                            <select name="chart_format" class="form-control" id="">
+                                <option value="">Select</option>
+                                <option value="tabular">tabular Format</option>
+                                <option value="card/box">Card/Box Format</option>
+                                <option value="accordian">Accordian Format</option>
+                                <option value="horizontal_size_selector">Horizontal Size Selector</option>
+                                <option value="size_comparison_scale">Size Comparison Scale</option>
+                            </select>
+                        </div>
+                        <div class="col-xl-10 mb-3">
+                            <label for="mesurement_type_inch" class="form-label">Inch </label>
+                            <input type="radio" id="mesurement_type_inch" name="mesurement_type" value="inch" onclick="changeMesurementType('inch')" {{ old('mesurement_type', 'inch') == 'inch' ? 'checked' : '' }}>
+                            <label for="mesurement_type_cm" class="form-label">CM </label>
+                            <input type="radio" id="mesurement_type_cm" name="mesurement_type" value="cm" onclick="changeMesurementType('cm')" {{ old('mesurement_type') == 'cm' ? 'checked' : '' }}>
+                        </div>
+                        <div class="col-xl-10 mb-3 mesurement_type_inch_div" id="">
+                            <div class="table-responsive">
+                                <table id="sizeChartTableUpperInch" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Upper</th>
+                                            <th>XS</th>
+                                            <th>S</th>
+                                            <th>M</th>
+                                            <th>L</th>
+                                            <th>XL</th>
+                                            <th>2XL</th>
+                                            <th>3XL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                                <button type="button" id="addRowUpperInch" class="btn btn-primary">Add More</button>
                             </div>
-                            @endif
+                        </div>
+                        <div class="col-xl-10 mb-3 mesurement_type_inch_div">
+                            <div class="table-responsive">
+                                <table id="sizeChartTableBottomInch" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Bottom</th>
+                                            <th>XS</th>
+                                            <th>S</th>
+                                            <th>M</th>
+                                            <th>L</th>
+                                            <th>XL</th>
+                                            <th>2XL</th>
+                                            <th>3XL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                                {{-- Dynamic rows will go here. You'll need JavaScript to populate old data for tables --}}
+                                    </tbody>
+                                </table>
+                                <button type="button" id="addRowBottomInch" class="btn btn-primary">Add More</button>
+                            </div>
+                        </div>
+                        <div class="col-xl-10 mb-3 mesurement_type_cm_div" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="sizeChartTableUpperCM" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Upper</th>
+                                            <th>XS</th>
+                                            <th>S</th>
+                                            <th>M</th>
+                                            <th>L</th>
+                                            <th>XL</th>
+                                            <th>2XL</th>
+                                            <th>3XL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{-- Dynamic rows will go here. You'll need JavaScript to populate old data for tables --}}
+                                    </tbody>
+                                </table>
+                                <button type="button" id="addRowUpper" class="btn btn-primary">Add More</button>
+                            </div>
+                        </div>
+                        <div class="col-xl-10 mb-3 mesurement_type_cm_div" style="display:none;">
+                            <div class="table-responsive">
+                                <table id="sizeChartTableBottomCM" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Bottom</th>
+                                            <th>XS</th>
+                                            <th>S</th>
+                                            <th>M</th>
+                                            <th>L</th>
+                                            <th>XL</th>
+                                            <th>2XL</th>
+                                            <th>3XL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{-- Dynamic rows will go here. You'll need JavaScript to populate old data for tables --}}
+                                    </tbody>
+                                </table>
+                                <button type="button" id="addRowBottom" class="btn btn-primary">Add More</button>
+                            </div>
+                        </div>
+                        <div class="col-xl-10 mb-3">
+                            <div class="form-group">
+                                <label for="">Chart Image</label>
+                                <input type="file" name="chart_image" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-xl-12 mb-3">
+                            <label for="chart_description" class="form-label">Chart Description</label>
+                            <textarea class="form-control" name="chart_description" id="chart_description" cols="30" rows="5">{{ old('chart_description', $chart_content->description ?? '') }}</textarea>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- start generate size chart table -->
-            <div class="card custom-card">
-                <div class="card-header">
-                    <div class="card-title">
-                        Images
-                    </div>
-                </div>
-                <div class="card-body">
-                    <!-- <div class="col-xl-12 mb-4">
-                        <label for="content_description" class="form-label">Content Description</label>
-                        <textarea class="form-control" name="content_description"></textarea>
-                    </div> -->
-                    <div id="image_details_container">
-                        <!-- Initial Row -->
-                        <div class="row image_details_row border border-primary rounded mb-2 p-2">
-                            <div class="col-xl-12">
-                                <button type="button" class="btn btn-danger btn-sm float-end remove_row_button">Remove</button>
-                            </div>
-                            <div class="col-xl-6">
-                                <label for="chart_image" class="form-label">Image</label>
-                                <input type="file" class="form-control" name="chart_image[]">
-                            </div>
-                            <div class="col-xl-6">
-                                <label for="file" class="form-label">Heading</label>
-                                <input type="text" class="form-control" name="image_heading[]">
-                            </div>
-                            <div class="col-xl-12">
-                                <label for="file" class="form-label">Description</label>
-                                <textarea class="form-control" name="image_description[]"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="button" class="btn btn-primary" id="add_more_button">Add More Images</button>
-                </div>
-            </div>
-
             <div class="px-4 py-3 border-top border-block-start-dashed d-sm-flex justify-content-end">
                 <button type="submit" class="btn btn-primary">Submit</button>
             </div>
@@ -269,192 +186,131 @@
 <script src="{{ asset('assets/js/repeater.js')}}"></script>
 
 <script>
-    CKEDITOR.replace(<?php echo 'centimeter_details'; ?>, {
-        filebrowserUploadUrl: '<?php echo URL()->to('base/uploder'); ?>',
-        enterMode: CKEDITOR.ENTER_BR
+    ['chart_description'].forEach(id => {
+    CKEDITOR.replace(id, {
+        filebrowserUploadUrl: '{{ URL()->to("base/uploder") }}',
+        enterMode: CKEDITOR.ENTER_BR,
+        allowedContent: true
     });
-    CKEDITOR.config.allowedContent = true;
+});
+const inchToCm = 2.54;
+function syncCMTable(inchSelector, cmSelector, nameReplace) {
+    const $cmBody = $(cmSelector).find('tbody').empty();
+    $(inchSelector).find('tbody tr').each(function() {
+        const $row = $('<tr/>');
+        $(this).find('input').each(function(i) {
+            let val = $(this).val();
+            let name = $(this).attr('name').replace(nameReplace.from, nameReplace.to);
+            val = i === 0 ? val : (val ? (parseFloat(val) * inchToCm).toFixed(2) : '');
+            $row.append(`
+                <td>
+                    <input type="${i === 0 ? 'text' : 'number'}"
+                           min="0"
+                           step="0.0001"
+                           name="${name}"
+                           class="form-control"
+                           value="${val}">
+                </td>
+            `);
+        });
 
-    CKEDITOR.replace(<?php echo 'inch_details'; ?>, {
-        filebrowserUploadUrl: '<?php echo URL()->to('base/uploder'); ?>',
-        enterMode: CKEDITOR.ENTER_BR
-    });
-    CKEDITOR.config.allowedContent = true;
+        $row.append(`
+            <td>
+                <button type="button"
+                        class="btn btn-danger ${cmSelector.includes('Upper') ? 'removeRowUpperCM' : 'removeRowBottomCM'}">
+                    X
+                </button>
+            </td>
+        `);
 
-    function getRelatedSubCategories()
-     {
-    var category_ids = $('#prdct_category_id').val();
-    $.ajax({
-        type: "GET",
-        url: "{{ route('admin-product-ajax-getrelatedsubcategories') }}",
-        data: {
-            category_ids: category_ids
-        },
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function(response) {
-            var html = '<option value="">Select Subcategory</option>';
-
-            if (response.success) {
-                $.each(response.subcategories, function(index, subcat) {
-                    html += '<option value="' + subcat.id + '">' + subcat.name + '</option>';
-                });
-                // Show the subcategory div if subcategories are available
-                $('#sub_category').show();
-            } else {
-                html += '<option value="">No Subcategories Available</option>';
-                $('#sub_category').hide(); // Hide if no subcategories
-            }
-            $("#prdct_sub_category_id").html(html);
-            $('#prdct_sub_category_id').select2({
-                placeholder: "Choose Sub Category",
-                width: "100%"
-            });
-        },
-        error: function(xhr, status, error) {
-            console.error('AJAX Error: ' + status + ' ' + error);
-        }
+        $cmBody.append($row);
     });
 }
 
-function getchildcategory() {
-    var display = document.getElementById('child_category');
-    var subctg_ids = $('#prdct_sub_category_id').val();
+function addRow(target, typePrefix, tableId) {
+    const sizes = ['xs', 's', 'm', 'l', 'xl', '2xl', '3xl'].map(size =>
+        `<td><input type="number" name="${typePrefix}_size_${size}[]" min="0" step="0.0001" class="form-control"></td>`
+    ).join('');
 
-    $.ajax({
-        type: "GET",
-        url: "{{ route('admin-product-ajax-getchildcategory') }}",
-        data: {
-            subctgids: subctg_ids
-        },
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function(response) {
-            if (response.success) {
-                var currentSelections = $('#Productid').val() || [];
-                var options = '<option value="add_item">Add another Item</option>';
+    const row = `
+        <tr>
+            <td><input type="text" name="${typePrefix}_type[]" class="form-control" placeholder="e.g., chest, waist"></td>
+            ${sizes}
+            <td>
+                <button type="button" class="btn btn-danger removeRow${typePrefix === 'upper' ? 'Upper' : 'Bottom'}">X</button>
+            </td>
+        </tr>`;
 
-                $.each(response.childcat, function(index, item) {
-                    options += '<option value="' + item.id + '">' + item.name + '</option>';
-                });
+    $(`#${tableId} tbody`).append(row);
+    if (tableId.includes('Inch')) {
+        const cmTableId = typePrefix === 'upper'
+            ? 'sizeChartTableUpperCM'
+            : 'sizeChartTableBottomCM';
 
-                $('#prdct_child_category_id').html(options);
-                $('#prdct_child_category_id').select2({
-                    placeholder: "Choose item",
-                    width: "100%"
-                });
-
-                $('#prdct_child_category_id').val(currentSelections).trigger('change');
-
-                // Show the child category div if child categories are available
-                $('#child_category').show();
-            } else {
-                $("#prdct_child_category_id").html('<option value="">No Product Available</option>');
-                $('#child_category').hide(); // Hide if no child categories
-                $('#prdct_child_category_id').select2({
-                    placeholder: "Choose item",
-                    width: "100%"
-                });
-            }
-        },
-        error: function(xhr, status, error) {
-            console.error('AJAX Error: ' + status + ' ' + error);
-            $("#prdct_child_category_id").html('<option value="">Error fetching Product</option>');
-            $('#prdct_child_category_id').select2({
-                placeholder: "Choose item",
-                width: "100%"
-            });
-        }
-    });
-}
-
-    document.addEventListener('DOMContentLoaded', function() {
-        function createImageRow() {
-            const newRow = document.createElement('div');
-            newRow.className = 'row image_details_row border border-primary rounded mb-2 p-2';
-            newRow.innerHTML = `
-                <div class="col-xl-12">
-                    <button type="button" class="btn btn-danger btn-sm float-end remove_row_button">Remove</button>
-                </div>
-                <div class="col-xl-6">
-                    <label for="chart_image" class="form-label">Image</label>
-                    <input type="file" class="form-control" name="chart_image[]">
-                </div>
-                <div class="col-xl-6">
-                    <label for="file" class="form-label">Heading</label>
-                    <input type="text" class="form-control" name="image_heading[]">
-                </div>
-                <div class="col-xl-12">
-                    <label for="file" class="form-label">Description</label>
-                    <textarea class="form-control" name="image_description[]"></textarea>
-                </div>
-            `;
-            return newRow;
-        }
-
-        function createOptionRow() {
-            const newOptionRow = document.createElement('div');
-            newOptionRow.className = 'row mb-3 option-group border border-primary rounded mb-2 p-2';
-            newOptionRow.innerHTML = `
-                            <div class="col-xl-12">
-                                <button type="button" class="btn btn-danger btn-sm float-end remove-btn">Remove</button>
-                            </div>
-                            <div class="col-xl-12 mb-3">
-                                <label class="form-label"><span class="text-danger">* </span>Option Name</label>
-                                <input type="text" class="form-control" name="option_name[]" placeholder="Enter option name">
-                            </div>
-                            <div class="col-xl-12 mb-3 input-container" id="inputFieldsContainer">
-                                <label class="form-label"><span class="text-danger">* </span>Option Value</label>
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control" name="option_value[]" placeholder="Enter option value">
-                                    <button type="button" class="btn btn-danger" onclick="removeOptionValue(this)"><i class="bi bi-trash3-fill"></i></button>
-                                </div>
-                            </div>
-                            <div class="col-xl-12">
-                                <button type="button" class="btn btn-primary add-btn">More value</button>
-                            </div>
-            `;
-            return newOptionRow;
-        }
-
-        document.getElementById('add_more_button').addEventListener('click', function() {
-            const newRow = createImageRow();
-            document.getElementById('image_details_container').appendChild(newRow);
+        syncCMTable(`#${tableId}`, `#${cmTableId}`, {
+            from: `${typePrefix}_size_`,
+            to: `${typePrefix}_size_cm_`
         });
-        document.getElementById('add-option').addEventListener('click', function() {
-            const newOptionRow = createOptionRow();
-            document.getElementById('options-container').appendChild(newOptionRow);
-        });
-
-        document.getElementById('image_details_container').addEventListener('click', function(event) {
-            if (event.target.classList.contains('remove_row_button')) {
-                event.target.closest('.row').remove();
-            }
-        });
-
-        document.getElementById('options-container').addEventListener('click', function(event) {
-            if (event.target.classList.contains('remove-btn')) {
-                event.target.closest('.row').remove();
-            }
-        });
-        document.querySelector('.add-btn').addEventListener('click', function() {
-            const inputFieldsContainer = document.getElementById('inputFieldsContainer');
-            const clonedContainer = inputFieldsContainer.cloneNode(true);
-            const inputs = clonedContainer.querySelectorAll('input');
-            inputs.forEach(input => input.value = '');
-            const parentContainer = inputFieldsContainer.parentElement;
-            parentContainer.insertBefore(clonedContainer, this.parentElement);
-        });
-
-    });
-
-    function removeOptionValue(button) {
-        const container = button.closest('.input-container');
-        if (container) {
-            container.remove();
-        }
     }
+}
+function changeMesurementType(type) {
+    $('.mesurement_type_inch_div').toggle(type === 'inch');
+    $('.mesurement_type_cm_div').toggle(type !== 'inch');
+}
+window.changeMesurementType = changeMesurementType;
+$(document)
+    .on('input', '#sizeChartTableUpperInch input', function() {
+        syncCMTable('#sizeChartTableUpperInch', '#sizeChartTableUpperCM', {
+            from: 'upper_size_',
+            to: 'upper_size_cm_'
+        });
+    })
+    .on('input', '#sizeChartTableBottomInch input', function() {
+        syncCMTable('#sizeChartTableBottomInch', '#sizeChartTableBottomCM', {
+            from: 'bottom_size_',
+            to: 'bottom_size_cm_'
+        });
+    })
+    .on('click', '#addRowUpperInch', function() {
+        addRow('Upper', 'upper', 'sizeChartTableUpperInch');
+    })
+    .on('click', '#addRowBottomInch', function() {
+        addRow('Bottom', 'bottom', 'sizeChartTableBottomInch');
+    })
+    .on('click', '#addRowUpper', function() {
+        addRow('Upper', 'upper', 'sizeChartTableUpperCM');
+    })
+    .on('click', '#addRowBottom', function() {
+        addRow('Bottom', 'bottom', 'sizeChartTableBottomCM');
+    })
+    .on('click', '.removeRowUpper, .removeRowBottom', function() {
+        $(this).closest('tr').remove();
+
+        const isUpper = $(this).hasClass('removeRowUpper');
+
+        if (isUpper) {
+            syncCMTable('#sizeChartTableUpperInch', '#sizeChartTableUpperCM', {
+                from: 'upper_size_',
+                to: 'upper_size_cm_'
+            });
+        } else {
+            syncCMTable('#sizeChartTableBottomInch', '#sizeChartTableBottomCM', {
+                from: 'bottom_size_',
+                to: 'bottom_size_cm_'
+            });
+        }
+    })
+    .on('click', '.removeRowUpperCM, .removeRowBottomCM', function() {
+        $(this).closest('tr').remove();
+    });
+    $(document).ready(function() {
+    if ($('#sizeChartTableUpperInch tbody tr').length === 0) {
+        addRow('Upper', 'upper', 'sizeChartTableUpperInch');
+    }
+
+    if ($('#sizeChartTableBottomInch tbody tr').length === 0) {
+        addRow('Bottom', 'bottom', 'sizeChartTableBottomInch');
+    }
+});
 </script>
 @endpush

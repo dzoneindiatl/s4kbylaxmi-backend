@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\SizeChartManager;
 use Exception;
 use App\Models\Tax;
 use App\Models\Variant;
@@ -77,6 +78,7 @@ class CategoryController extends Controller
         $variants   = Variant::active()->notDeleted()->select('id', 'name')->get();
         $attributes = Attribute::active()->notDeleted()->select('id', 'name')->get();
         $taxes = Tax::where('tax_option', 'inclusive')->where('tax_type', 'flat')->where('is_active', 1)->select('id', 'tax_from', 'tax_to', 'tax_rate')->get();
+        $sizeCharts = SizeChartManager::where('status','1')->get(); 
         $specifications = Specification::active()->notDeleted()
             ->with('group')
             ->get()
@@ -84,10 +86,10 @@ class CategoryController extends Controller
                 return [$spec->id => "{$spec->group->name} > {$spec->name}"];
             });
         $productDetailManagers = ProductDetailManager::get();
-        $chart_content = SizeChartTebularContent::first();
+        // $chart_content = SizeChartTebularContent::first();
         $nextPriority = (Category::max('priority') ?? 0) + 1;
 
-        return view('admin.category.create', compact('variants', 'productDetailManagers', 'attributes', 'taxes', 'specifications', 'chart_content', 'nextPriority'));
+        return view('admin.category.create', compact('variants', 'productDetailManagers', 'attributes', 'taxes', 'specifications', 'sizeCharts', 'nextPriority'));
     }
 
     public function store(CreateCategoryRequest $request, CategoryService $service)
@@ -168,9 +170,7 @@ class CategoryController extends Controller
         $categoryAttribute      = CategoryAttribute::where('category_id', $categoryId)->pluck('attribute_id')->toArray();
         $taxes = Tax::where('tax_option', @$categoryTaxesValues['tax_option'])->where('tax_type', @$categoryTaxesValues['tax_type'])->where('is_active', 1)->select('id', 'tax_from', 'tax_to', 'tax_rate')->get();
         $productDetailManagers = ProductDetailManager::get();
-
-        // Size chart
-        $chart_measurement      = SizeChartTebular::where('category_id', $categoryId)->first();
+        $sizeCharts = SizeChartManager::where('status','1')->get(); 
         
         return view("admin.$this->model.edit", compact(
             'category',
@@ -184,7 +184,7 @@ class CategoryController extends Controller
             'taxes',
             'specifications',
             'attributes',
-            'chart_measurement',
+            'sizeCharts',
         ));
         // } catch (\Exception $e) {
         //     Log::error($e);

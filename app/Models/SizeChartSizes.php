@@ -3,14 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use File;
 use Illuminate\Database\Eloquent\Model;
 
-class Size extends Model
+class SizeChartSizes extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
-    public $table = 'sizes';
-
+    protected $table = 'size_chart_sizes'; 
 }

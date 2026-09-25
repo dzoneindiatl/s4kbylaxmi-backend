@@ -69,17 +69,12 @@ class CategoryService
                 'category_type_id'  => isset($data['select_category_type']) ? $data['select_category_type'] : 2,
                 'priority'          => $data['priority'] ?? null,
                 'description'       => $data['description'] ?? null,
+                'size_chart_id'     =>$data['size_chart_id'] ?? null,
                 'meta_title'        => $data['meta_title'] ?? null,
                 'meta_description'  => $data['meta_description'] ?? null,
                 'meta_keywords'     => $data['meta_keywords'] ?? null,
                 'seo_description'   => $data['seo_description'] ?? null,
                 'value'             => $data['seo_data'] ?? null,
-                'width'             => $data['width'] ?? null,
-                'height'            => $data['height'] ?? null,
-                'uppar_chart_title' => $data['uppar_chart_title'] ?? null,
-                'bootom_chart_title'=> $data['bootom_chart_title'] ?? null,
-                'chart_title'       => $data['chart_title'] ?? null,
-                'chart_description' => $data['chart_description'] ?? null,
                 'show_on_home' => $data['show_on_home'] ?? 0,
                 'show_on_menu' => $data['show_on_menu'] ?? 0,
                 'is_active' => $data['is_active'] ?? 0,
@@ -133,18 +128,11 @@ class CategoryService
                 if(!empty($data['tax_rate']) && !empty($data['tax_option']) && !empty($data['tax_type'])){
                     $this->attachTaxes($category, $data['tax_rate'] ?? [], $data['tax_option'], $data['tax_type']);
                 }
-                $this->updateSizeChart($category, $data);
             }
         
 
             DB::commit();
             return ['success' => true];
-
-        // } catch (\Exception $e) {
-        //     dd('ddsd');
-        //     DB::rollBack();
-        //     return ['error' => $e->getMessage()];
-        // }
     }
 
 
@@ -188,17 +176,6 @@ class CategoryService
         }
     }
 
-    /*private function attachTaxes($category, $taxes)
-    {
-        $category->taxes()->delete();
-        foreach ($taxes as $taxId => $value) {
-            $category->taxes()->create([
-                'tax_id' => $taxId,
-                'tax_value' => $value
-            ]);
-        }
-    }*/
-    
     private function attachTaxes($category, $taxes, $tax_option, $tax_type)
     {
         $category->taxes()->delete();
@@ -210,34 +187,4 @@ class CategoryService
             ]);
         }
     }
-
-    private function updateSizeChart(Category $category, array $data)
-    {
-        $measurementType = $data['mesurement_type'] ?? 'inch';
-        $sizeData = ['upper' => [], 'bottom' => []];
-
-        $prefix = $measurementType === 'inch' ? '' : '_cm';
-
-        foreach (['upper', 'bottom'] as $section) {
-            $sectionKey = $section == "upper" ? 'top' : $section;
-            $typeKey = "{$sectionKey}_type{$prefix}";
-            foreach ($data[$typeKey] ?? [] as $i => $type) {
-                $sizeData[$section][$type] = [
-                    'xs' => $data["{$sectionKey}_size{$prefix}_xs"][$i] ?? 0,
-                    's' => $data["{$sectionKey}_size{$prefix}_s"][$i] ?? 0,
-                    'm' => $data["{$sectionKey}_size{$prefix}_m"][$i] ?? 0,
-                    'l' => $data["{$sectionKey}_size{$prefix}_l"][$i] ?? 0,
-                    'xl' => $data["{$sectionKey}_size{$prefix}_xl"][$i] ?? 0,
-                    '2xl' => $data["{$sectionKey}_size{$prefix}_2xl"][$i] ?? 0,
-                    'is_active' => 1,
-                ];
-            }
-        }
-
-        // Save category-specific size chart
-        $chart = SizeChartTebular::firstOrNew(['category_id' => $category->id]);
-        $chart->{"measurement_{$measurementType}"} = json_encode($sizeData);
-        $chart->save();
-    }
-
 }

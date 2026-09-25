@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.bootstrap5.min.css">
 <link rel="stylesheet" href="{{ asset('assets/libs/sweetalert2/sweetalert2.min.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 @endpush
 
 @section('content')
@@ -31,13 +32,13 @@
                 <div class="card-title">
                     Size Charts
                 </div>
-                <div class="prism-toggle">
+                {{-- <div class="prism-toggle">
                     <a href="javascript:void(0);" class="btn btn-primary dropdown-toggle mr-2" data-bs-toggle="collapse"
                         data-bs-target="#collapseOne6">
                         Search
                     </a>
                     <a href="{{ route('admin-size-charts.create') }}" class="btn btn-primary">Add Size Chart</a>
-                </div>
+                </div> --}}
             </div>
 
             <div class="accordion accordion-solid accordion-toggle-plus" id="accordionExample6">
@@ -111,6 +112,7 @@
                 <thead>
                     <tr id="tableHeaders">
                         <th class="sortable" data-column="name">Name <i class="sort-icon ri-sort-asc"></i></th>
+                        <th class="sortable" data-column="chart_format">Chart Format <i class="sort-icon ri-sort-asc"></i></th>
                         <th class="sortable" data-column="created_at">Created At <i class="sort-icon ri-sort-asc"></i>
                         <th class="sortable" data-column="is_active">Status <i class="sort-icon ri-sort-asc"></i>
                         </th>
@@ -159,6 +161,81 @@
         </div>
     </div>
 </div>
+<style>
+    .textcentercss{
+        margin-left:10em; 
+    }
+</style>
+@foreach($results as $result)
+    <div class="modal fade"
+         id="centimeterPreviewModal{{ $result->id }}"
+         tabindex="-1"
+         aria-hidden="true">
+
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">{{ $result->title }}</h5>
+                    <h4 class="textcentercss">{{ ucwords(str_replace('_',' ',$result->chart_format)) }}</h4>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <ul class="nav nav-tabs mb-3"
+                        id="sizeChartTabs{{ $result->id }}"
+                        role="tablist">
+
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#inchTab{{ $result->id }}"
+                                    type="button">
+                                Inch
+                            </button>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#cmTab{{ $result->id }}"
+                                    type="button">
+                                CM
+                            </button>
+                        </li>
+
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active"
+                             id="inchTab{{ $result->id }}">
+
+                            @include('admin.size-charts.preview_format', [
+                                'result' => $result,
+                                'unit' => 'inch'
+                            ])
+
+                        </div>
+                        <div class="tab-pane fade"
+                             id="cmTab{{ $result->id }}">
+
+                            @include('admin.size-charts.preview_format', [
+                                'result' => $result,
+                                'unit' => 'cm'
+                            ])
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+@endforeach
 @endsection
 
 @push('scripts')
@@ -183,4 +260,24 @@ var routeName = '{{route($listRouteName)}}';
 
 <script src="{{ asset('assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
 <script src="{{ asset('assets/js/sweet-alerts.js') }}"></script>
+<script>
+$(document).on('click', '.size-select-btn', function () {
+    const $button = $(this);
+    const sizeId = $button.data('size-id');
+    const $container = $button.closest('.size-selector');
+
+    $container.find('.size-select-btn').removeClass('active');
+    $button.addClass('active');
+
+    $container
+        .closest('.mb-4')
+        .find('[data-size-content]')
+        .addClass('d-none');
+
+    $container
+        .closest('.mb-4')
+        .find(`[data-size-content="${sizeId}"]`)
+        .removeClass('d-none');
+});
+</script>
 @endpush

@@ -75,12 +75,14 @@
                                         class="form-control @error('product_type') is-invalid @enderror">
                                         <option value="">Select Design Type</option>
                                         <option value="1" {{$recordDetails->type ==1?'selected':''}}>Only Round</option>
-                                        <option value="2" {{$recordDetails->type ==2?'selected':''}}>Only Box</option>
-                                        <option value="7" {{$recordDetails->type ==7?'selected':''}}>Only Rectangle</option>
-                                        <option value="3" {{$recordDetails->type ==3?'selected':''}}>Round with image</option>
                                         <option value="4" {{$recordDetails->type ==4?'selected':''}}>Round with color</option>
+                                        <option value="3" {{$recordDetails->type ==3?'selected':''}}>Round with image</option>
+                                        <option value="2" {{$recordDetails->type ==2?'selected':''}}>Only Box</option>
                                         <option value="5" {{$recordDetails->type ==5?'selected':''}}>Box with color</option>
                                         <option value="6" {{$recordDetails->type ==6?'selected':''}}>Box with Images</option>
+                                        <option value="7" {{$recordDetails->type ==7?'selected':''}}>Only Rectangle</option>
+                                        <option value="8" {{$recordDetails->type ==8?'selected':''}}>Rectangle with image</option>
+                                        <option value="9" {{$recordDetails->type ==9?'selected':''}}>Rectangle with color</option>
                                     </select>                                        
                                     @if ($errors->has('product_type'))
                                     <div class=" invalid-feedback">

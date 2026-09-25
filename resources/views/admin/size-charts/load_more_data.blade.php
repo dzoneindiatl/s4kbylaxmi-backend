@@ -1,11 +1,11 @@
 @if($results->isNotEmpty())
 @forelse($results as $result)
 <tr class="list-data-row items-inner" data-total-count="{{$totalResults}}" data-id = "{{$result->id}}">
-
-    <td>{{ $result->name ?? "N/A" }}</td>
+    <td>{{ $result->title ?? "N/A" }}</td>
+    <td> {{ ucwords(str_replace('_',' ',$result->chart_format)) ?? "N/A" }} </td>
     <td>{{ date('Y-m-d',strtotime($result->created_at)) }}</td>
     <td>
-        @if($result->is_active == 1)
+        @if($result->status == '1')
         <span class="badge bg-success">Activated</span>
         @else
         <span class="badge bg-danger">Deactivated</span>
@@ -14,44 +14,15 @@
 
     <td>
         <div class="hstack gap-2 flex-wrap">
-            @if($result->is_active == 1)
-            <a href='{{route("admin-size-charts.status",array($result->id,0))}}' class="btn btn-danger"
-                id="deactivate-button"><i class="ri-close-line"></i></a>
+            {{-- @if($result->status == 1)
+                <a href='{{route("admin-size-charts.status",array($result->id,0))}}' class="btn btn-danger" id="deactivate-button"><i class="ri-close-line"></i></a>
             @else
-            <a href='{{route("admin-size-charts.status",array($result->id,1))}}' class="btn btn-success"
-                id="activate-button"><i class="ri-check-line"></i></a>
-            @endif
-
-            <!-- <a href="{{route('admin-size-charts.show',base64_encode($result->id))}}" class="btn btn-info"><i
-                    class="ri-eye-line"></i></a> -->
-
-            <!-- <a href="{{route('admin-size-charts.edit',base64_encode($result->id))}}" class="btn btn-info"><i
-                    class="ri-edit-line"></i></a>-->
-
-            <form method="GET" action="{{route('admin-size-charts.delete',base64_encode($result->id))}}">
-                @csrf
-                <input name="_method" type="hidden" value="DELETE">
-                <button type="submit" class="btn btn-danger" id="confirm-button"><i
-                        class="ri-delete-bin-5-line"></i></button>
-            </form>
-
-           <!--   <div class="dropdown dropdown-inline">
-                <a href="javascript:;" class="btn btn-light"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="ri-list-check"></i>
-                </a>
-              <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
-                    <ul class="nav nav-hoverable flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link"
-                                href="{{route('admin-size-chart-details.index',base64_encode($result->id))}}">
-                                <span class="nav-text">Size Chart Details</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>-->
-
+                <a href='{{route("admin-size-charts.status",array($result->id,1))}}' class="btn btn-success" id="activate-button"><i class="ri-check-line"></i></a>
+            @endif --}}
+            <a href="{{ route('admin-size-charts.edit', base64_encode($result->id)) }}" class="btn btn-info" title="Edit Product"><i class="ri-edit-line"></i></a>
+            <button type="button" class="btn previewCmBtn"data-bs-toggle="modal" data-bs-target="#centimeterPreviewModal{{ $result->id }}" title="Preview">
+                <i class="fa-solid fa-eye" style="color:red;"></i>
+            </button>
         </div>
     </td>
 </tr>

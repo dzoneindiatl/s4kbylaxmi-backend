@@ -282,333 +282,25 @@
                 </div>
             </div>
 
-            @php
-            $selected_size_chart = 1; // this value can be dynamic in future
-            @endphp 
-            @if ($selected_size_chart == 1)
             <div class="card custom-card">
                 <div class="card-header">
                     <div class="card-title">
                         Manage Size Chart
                     </div>
                 </div>
-
-          
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xl-6 mb-3">
-                            <label for="name" class="form-label"><span class="text-danger">
-                                </span>Chart Title</label>
-                            <input type="text" class="form-control" id="chart_title"  name="chart_title"
-                                placeholder="Enter Chart  Title" value="{{ $category->chart_title ?? '' }}">
-                        </div>
-                        <div class="col-xl-10 mb-3">
-                            <label for="mesurement_type_inch" class="form-label"><span class="text-danger">
-                                </span>Inch </label>
-                            <input type="radio" checked id="mesurement_type_inch" name="mesurement_type" value="inch"
-                                onclick="changeMesurementType('inch')">
-                            <label for="mesurement_type_cm" class="form-label"><span class="text-danger">
-                                </span>CM </label>
-                            <input type="radio" id="mesurement_type_cm" name="mesurement_type" value="cm"
-                                onclick="changeMesurementType('cm')">
-                        </div>
-                        <div class="col-xl-10 mb-3 mesurement_type_inch_div" id="">
-
-                            <div class="table-responsive">
-                                <table id="sizeChartTableUpper" class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Upper</th>
-                                            <th>XS</th>
-                                            <th>S</th>
-                                            <th>M</th>
-                                            <th>L</th>
-                                            <th>XL</th>
-                                            <th>2XL</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                        $measurement_inch = '';
-                                        if (
-                                        $chart_measurement &&
-                                        !empty($chart_measurement->measurement_inch)
-                                        ) {
-                                        $measurement_inch = json_decode(
-                                        $chart_measurement->measurement_inch,
-                                        true,
-                                        );
-                                        }
-
-                                        @endphp
-                                        @if (!empty($measurement_inch) && is_array($measurement_inch))
-                                        @foreach ($measurement_inch['upper'] as $u_type => $inch)
-                                        <tr>
-                                            <td><input type="text" name="upper_type[]" required class="form-control"
-                                                    placeholder="e.g., chest, hip" value="{{ $u_type }}">
-                                            </td>
-                                            <td><input type="number" name="top_size_xs[]" step="0.0001"
-                                                    class="form-control" value="{{ $inch['xs'] }}">
-                                            </td>
-                                            <td><input type="number" name="top_size_s[]" step="0.0001"
-                                                    class="form-control" value="{{ $inch['s'] }}">
-                                            </td>
-                                            <td><input type="number" name="top_size_m[]" step="0.0001"
-                                                    class="form-control" value="{{ $inch['m'] }}">
-                                            </td>
-                                            <td><input type="number" name="top_size_l[]" step="0.0001"
-                                                    class="form-control" value="{{ $inch['l'] }}">
-                                            </td>
-                                            <td><input type="number" name="top_size_xl[]" step="0.0001"
-                                                    class="form-control" value="{{ $inch['xl'] }}">
-                                            </td>
-                                            <td><input type="number" name="top_size_2xl[]" step="0.0001"
-                                                    class="form-control" value="{{ $inch['2xl'] }}">
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-danger removeRowUpper">X</button>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                        @else
-                                       
-                                                                                                                 
-                                        @endif
-                                    </tbody>
-                                </table>
-                                <button type="button" id="addRowUpper" class="btn btn-primary">Add
-                                    More</button>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-10 mb-3 mesurement_type_inch_div">
-                            <div class="table-responsive">
-                                <table id="sizeChartTableBottom" class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Bottom</th>
-                                            <th>XS</th>
-                                            <th>S</th>
-                                            <th>M</th>
-                                            <th>L</th>
-                                            <th>XL</th>
-                                            <th>2XL</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if (!empty($measurement_inch) && is_array($measurement_inch))
-                                        @foreach ($measurement_inch['bottom'] as $u_type => $inch)
-                                        <tr>
-                                            <td><input type="text" name="bottom_type[]" required class="form-control"
-                                                    placeholder="e.g., chest, hip" value="{{ $u_type }}"></td>
-                                            <td><input type="number" name="bottom_size_xs[]" step="0.0001"
-                                                    class="form-control" value="{{ $inch['xs'] }}"></td>
-                                            <td><input type="number" name="bottom_size_s[]" step="0.0001"
-                                                    class="form-control" value="{{ $inch['s'] }}"></td>
-                                            <td><input type="number" name="bottom_size_m[]" step="0.0001"
-                                                    class="form-control" value="{{ $inch['m'] }}"></td>
-                                            <td><input type="number" name="bottom_size_l[]" step="0.0001"
-                                                    class="form-control" value="{{ $inch['l'] }}"></td>
-                                            <td><input type="number" name="bottom_size_xl[]" step="0.0001"
-                                                    class="form-control" value="{{ $inch['xl'] }}"></td>
-                                            <td><input type="number" name="bottom_size_2xl[]" step="0.0001"
-                                                    class="form-control" value="{{ $inch['2xl'] }}">
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-danger removeRowBottom">X</button>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                        @else
-                                        
-                                        @endif
-                                    </tbody>
-                                </table>
-                                <button type="button" id="addRowBottom" class="btn btn-primary">Add
-                                    More</button>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-10 mb-3 mesurement_type_cm_div" style="display:none;">
-
-                            <div class="table-responsive">
-                                <table id="sizeChartTableUpperCM" class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Upper</th>
-                                            <th>XS</th>
-                                            <th>S</th>
-                                            <th>M</th>
-                                            <th>L</th>
-                                            <th>XL</th>
-                                            <th>2XL</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                        $measurement_cm = '';
-                                        if (
-                                        $chart_measurement &&
-                                        !empty($chart_measurement->measurement_cm)
-                                        ) {
-                                        $measurement_cm = json_decode(
-                                        $chart_measurement->measurement_cm,
-                                        true,
-                                        );
-                                        }
-
-                                        @endphp
-                                        @if (!empty($measurement_cm) && is_array($measurement_cm))
-                                        @foreach ($measurement_cm['upper'] as $u_type => $cm)
-                                        <tr>
-                                            <td><input type="text" name="upper_type_cm[]" required class="form-control"
-                                                    placeholder="e.g., chest, hip" value="{{ $u_type }}">
-                                            </td>
-                                            <td><input type="number" name="top_size_cm_xs[]" step="0.0001"
-                                                    class="form-control" value="{{ $cm['xs'] }}"></td>
-
-                                            <td><input type="number" name="top_size_cm_s[]" step="0.0001"
-                                                    class="form-control" value="{{ $cm['s'] }}"></td>
-
-                                            <td><input type="number" name="top_size_cm_m[]" step="0.0001"
-                                                    class="form-control" value="{{ $cm['m'] }}"></td>
-
-                                            <td><input type="number" name="top_size_cm_l[]" step="0.0001"
-                                                    class="form-control" value="{{ $cm['l'] }}"></td>
-
-                                            <td><input type="number" name="top_size_cm_xl[]" step="0.0001"
-                                                    class="form-control" value="{{ $cm['xl'] }}"></td>
-
-                                            <td><input type="number" name="top_size_cm_2xl[]" step="0.0001"
-                                                    class="form-control" value="{{ $cm['2xl'] }}">
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-danger removeRowUpperCM">X</button>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                        @else
-                                      
-                                        @endif
-                                    </tbody>
-                                </table>
-                                <button type="button" id="addRowUpperCM" class="btn btn-primary">Add
-                                    More</button>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-10 mb-3 mesurement_type_cm_div" style="display:none;">
-                            <div class="table-responsive">
-                                <table id="sizeChartTableBottomCM" class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Bottom</th>
-                                            <th>XS</th>
-                                            <th>S</th>
-                                            <th>M</th>
-                                            <th>L</th>
-                                            <th>XL</th>
-                                            <th>2XL</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @if (!empty($measurement_cm) && is_array($measurement_cm))
-                                        @foreach ($measurement_cm['bottom'] as $u_type => $cm)
-                                        <tr>
-                                            <td><input type="text" name="bottom_type_cm[]" required class="form-control"
-                                                    placeholder="e.g., chest, hip" value="{{ $u_type }}"></td>
-                                            <td><input type="number" name="bottom_size_cm_xs[]" step="0.0001"
-                                                    class="form-control" value="{{ $cm['xs'] }}"></td>
-                                            <td><input type="number" name="bottom_size_cm_s[]" step="0.0001"
-                                                    class="form-control" value="{{ $cm['s'] }}"></td>
-                                            <td><input type="number" name="bottom_size_cm_m[]" step="0.0001"
-                                                    class="form-control" value="{{ $cm['m'] }}"></td>
-                                            <td><input type="number" name="bottom_size_cm_l[]" step="0.0001"
-                                                    class="form-control" value="{{ $cm['l'] }}"></td>
-                                            <td><input type="number" name="bottom_size_cm_xl[]" step="0.0001"
-                                                    class="form-control" value="{{ $cm['xl'] }}"></td>
-                                            <td><input type="number" name="bottom_size_cm_2xl[]" step="0.0001"
-                                                    class="form-control" value="{{ $cm['2xl'] }}">
-                                            </td>
-                                            <td>
-                                                <button type="button"
-                                                    class="btn btn-danger removeRowBottomCM">X</button>
-                                            </td>
-                                        </tr>
-                                        @endforeach
-                                        @else
-                                       
-                                        @endif
-                                    </tbody>
-                                </table>
-                                <button type="button" id="addRowBottomCM" class="btn btn-primary">Add
-                                    More</button>
-                            </div>
-                        </div>
-                        <div class="col-xl-6">
-                            <div class="card-body p-0">
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">Chart Uppar Title</label>
-                                    <input type="text"
-                                        class="form-control @error('uppar_chart_title') is-invalid @enderror"
-                                        id="uppar_chart_title" name="uppar_chart_title" placeholder="Enter Chart Title"
-                                        value="{{ $category->uppar_chart_title }}">
-                                    {{-- <h6 class="category-slug mt-2"></h6> --}}
-                                    @if ($errors->has('uppar_chart_title'))
-                                    <div class="invalid-feedback">
-                                        {{ $errors->first('uppar_chart_title') }}
-                                    </div>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-6 mb-3">
-                            <label for="image" class="form-label">Chart Uppar Image</label>
-                            <input type="file" class="form-control @error('uppar_chart_image') is-invalid @enderror"
-                                id="uppar_chart_image" name="uppar_chart_image" accept="image/*">
-                            @if ($errors->has('uppar_chart_image'))
-                            <div class="invalid-feedback">
-                                {{ $errors->first('uppar_chart_image') }}
-                            </div>
-                            @endif
-                        </div>
-
-                        <div class="col-xl-6">
-                            <div class="card-body p-0">
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">Chart Bottom Title</label>
-                                    <input type="text"
-                                        class="form-control @error('bootom_chart_title') is-invalid @enderror"
-                                        id="bootom_chart_title" name="bootom_chart_title"
-                                        placeholder="Enter Bottom Chart Title"
-                                        value="{{ $category->bootom_chart_title }}">
-                                    @if ($errors->has('bootom_chart_title'))
-                                    <div class="invalid-feedback">
-                                        {{ $errors->first('bootom_chart_title') }}
-                                    </div>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xl-6 mb-3">
-                            <label for="image" class="form-label">Chart Bottom Image</label>
-                            <input type="file" class="form-control @error('bottom_chart_image') is-invalid @enderror"
-                                id="bottom_chart_image" name="bottom_chart_image" accept="image/*">
-                            @if ($errors->has('bottom_chart_image'))
-                            <div class="invalid-feedback">
-                                {{ $errors->first('bottom_chart_image') }}
-                            </div>
-                            @endif
-                        </div>
-                        <div class="col-xl-12 mb-3">
-                            <label for="seo_data" class="form-label">Chart Description</label>
-                            <textarea class="form-control" name="chart_description" id="chart_description" cols="30"
-                                rows="5">{{ $category->description ?? '' }}</textarea>
+                        <div class="form-group">
+                            <select name="size_chart_id" class="form-control" id="">
+                                <option value="">Select</option>
+                                @foreach($sizeCharts as $chart)
+                                    <option value="{{ $chart->id }}" {{ $category->size_chart_id == $chart->id ? 'selected' : ''  }}>{{ ucwords(str_replace('_',' ',$chart->title)) }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
                 </div>
             </div>
-            @endif
 
             <div class="card custom-card">
                 <div class="card-header">
@@ -801,7 +493,6 @@
 <script src="{{ asset('assets/js/custom/category.js') }}"></script>
 <script>
 
-const inchToCm = 2.54;
 var getCategoryTaxRateListRoute = "{{ route('admin-category.getTaxRateList') }}";
 var taxOption = $("input[name='tax_option']:checked").val();
 $("input[name='tax_option']").on('change', function() {
@@ -816,9 +507,8 @@ $(function() {
         $('.taxContainers').hide().find('input').prop('disabled', true);
         selectedTaxes.forEach(id => $(`.taxDiv${id}`).show().find('input').prop('disabled', false));
     });
- 
-    // CKEditor init
-    ['description', 'seo_data', 'chart_description'].forEach(id => {
+
+    ['description', 'seo_data'].forEach(id => {
     
       
         CKEDITOR.replace(id, {
@@ -827,96 +517,6 @@ $(function() {
         });
         CKEDITOR.config.allowedContent = true;
     });
-
-    const updateCMTable = (sourceSelector, targetSelector, inputNameMap) => {
-        const $rows = $(`${sourceSelector} tbody tr`);
-        const $cmBody = $(`${targetSelector} tbody`).empty();
-        $rows.each(function() {
-            const $inputs = $(this).find('input');
-            const $cmRow = $('<tr>');
-            $inputs.each(function(i) {
-                const val = $(this).val();
-                const name = $(this).attr('name')
-                    .replace(inputNameMap.from, inputNameMap.to)
-                    .replace(inputNameMap.typeFrom, inputNameMap.typeTo);
-                const cmVal = i === 0 ? val : (val ? (parseFloat(val) * inchToCm).toFixed(
-                    2) : '');
-                $cmRow.append(
-                    `<td><input type="${i === 0 ? 'text' : 'number'}" step="0.0001" name="${name}" class="form-control" value="${cmVal}"></td>`
-                    );
-            });
-            $cmRow.append(
-                `<td><button type="button" class="btn btn-danger ${inputNameMap.removeClass}">X</button></td>`
-                );
-            $cmBody.append($cmRow);
-        });
-    };
-
-    const bindSizeChartEvents = (section) => {
-        const upper = section === 'Upper';
-        const source = `#sizeChartTable${section}`;
-        const target = `#sizeChartTable${section}CM`;
-        const prefix = upper ? 'top' : 'bottom';
-
-        $(document).on('input', `${source} input`, () => {
-            updateCMTable(source, target, {
-                from: `${prefix}_size_`,
-                to: `${prefix}_size_cm_`,
-                typeFrom: `${prefix}_type`,
-                typeTo: `${prefix}_type_cm`,
-                removeClass: `removeRow${section}CM`
-            });
-        });
-
-        $(`#addRow${section}`).on('click', () => {
-            const row = `
-                    <tr>
-                        <td><input type="text" name="${prefix}_type[]" class="form-control" placeholder="e.g., chest"></td>
-                        ${['xs','s','m','l','xl','2xl'].map(size => `<td><input type="number" name="${prefix}_size_${size}[]" step="0.0001" class="form-control"></td>`).join('')}
-                        <td><button type="button" class="btn btn-danger removeRow${section}">X</button></td>
-                    </tr>`;
-            $(`${source} tbody`).append(row);
-            updateCMTable(source, target, {
-                from: `${prefix}_size_`,
-                to: `${prefix}_size_cm_`,
-                typeFrom: `${prefix}_type`,
-                typeTo: `${prefix}_type_cm`,
-                removeClass: `removeRow${section}CM`
-            });
-        });
-
-        $(document).on('click', `.removeRow${section}`, function() {
-            $(this).closest('tr').remove();
-            updateCMTable(source, target, {
-                from: `${prefix}_size_`,
-                to: `${prefix}_size_cm_`,
-                typeFrom: `${prefix}_type`,
-                typeTo: `${prefix}_type_cm`,
-                removeClass: `removeRow${section}CM`
-            });
-        });
-
-        $(document).on('click', `.removeRow${section}CM`, function() {
-            $(this).closest('tr').remove();
-        });
-
-        updateCMTable(source, target, {
-            from: `${prefix}_size_`,
-            to: `${prefix}_size_cm_`,
-            typeFrom: `${prefix}_type`,
-            typeTo: `${prefix}_type_cm`,
-            removeClass: `removeRow${section}CM`
-        });
-    };
-
-    bindSizeChartEvents('Upper');
-    bindSizeChartEvents('Bottom');
-
-    // Measurement toggle
-    window.changeMesurementType = type => {
-        $('.mesurement_type_inch_div').toggle(type === 'inch');
-        $('.mesurement_type_cm_div').toggle(type !== 'inch');
-    };
 });
 
 $(document).on('click', '.delete-category-image', function () {

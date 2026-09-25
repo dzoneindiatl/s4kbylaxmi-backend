@@ -17,6 +17,10 @@
         Box with Images
         @elseif($result->type == 7)
         Only Rectangle
+        @elseif($result->type== 8)
+        Rectangle with image
+        @elseif($result->type == 9)
+        Rectangle with color
         @endif
     </td>                                        
     <td>{{ $result->created_at }}</td>
