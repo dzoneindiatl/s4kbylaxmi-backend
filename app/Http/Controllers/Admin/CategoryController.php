@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Imports\CategoryImport;
 use App\Models\SizeChartManager;
 use Exception;
 use App\Models\Tax;
@@ -350,5 +351,16 @@ class CategoryController extends Controller
             'status' => true,
             'message' => 'Image deleted successfully'
         ]);
+    }
+
+    public function importExcelDataIntoTbl(Request $request)
+    {    
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls|max:10240',
+        ]);
+        // dd($request->all()); 
+        Excel::import(new CategoryImport, $request->file('file'));
+
+        return redirect()->route('admin-category.index')->with('success', 'Category Imported successfully');
     }
 }

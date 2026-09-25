@@ -68,45 +68,63 @@ class ProductController extends Controller
     }
 
     public function updatedata(Request $request)
-    {
+    {   
         $productIds = array_keys($request->input('product', []));
-
         if (empty($request->bulk_action) || empty($productIds)) {
             redirect()->back();
         }
-
+        // return $request->all(); 
         if (!empty($productIds)) {
             switch ($request->input('bulk_action')) {
                 case 1:
-                    Product::whereIn('id', $productIds)->update(['is_active' => 2]);
+                    Product::whereIn('id', $productIds)->update(['is_active' => "2"]);
                     break;
-
+                    
                 case 2:
-                    Product::whereIn('id', $productIds)->update(['is_active' => 1]);
+                    Product::whereIn('id', $productIds)->update(['is_active' => "1"]);
                     break;
 
                 case 3:
-                    Product::whereIn('id', $productIds)->update(['is_active' => 3]);
+                    Product::whereIn('id', $productIds)->update(['is_active' => "1"]);
                     break;
 
                 case 4:
-                    Product::whereIn('id', $productIds)->update(['is_featured' => 1]);
+                    Product::whereIn('id', $productIds)->update(['is_active' => "0"]);
                     break;
 
                 case 5:
-                    Product::whereIn('id', $productIds)->update(['is_featured' => 0]);
+                    Product::whereIn('id', $productIds)->update(['is_featured' => 1]);
                     break;
 
                 case 6:
-                    Product::whereIn('id', $productIds)->update(['is_new_arrivals' => 1]);
+                    Product::whereIn('id', $productIds)->update(['is_featured' => 0]);
                     break;
 
                 case 7:
-                    Product::whereIn('id', $productIds)->update(['is_new_arrivals' => 0]);
+                    Product::whereIn('id', $productIds)->update(['is_new_arrivals' => 1]);
                     break;
+                
+                case 8: 
+                    Product::whereIn('id', $productIds)->update(['is_new_arrivals' => 0]);
+                    break;  
+
+                case 9: 
+                    Product::whereIn('id',$productIds)->update(['best_seller'=> 1 ]);     
+                    break; 
+
+                case 10:
+                    Product::whereIn('id',$productIds)->update(['best_seller'=>0]); 
+                    break; 
+
+                case 11: 
+                    Product::wherein('id',$productIds)->update(['trending'=>1]); 
+                    break; 
+                    
+                case 12: 
+                    Product::whereIn('id',$productIds)->update(['trending'=>0]);     
+                    break; 
 
                 default:
-
                     return redirect()->back();
             }
             return redirect()->back();
