@@ -20,7 +20,7 @@ class CategoryService
             $query = Category::with('getUser')->whereNull('parent_id')
                                     ->where('is_deleted', 0); 
         }
-       
+
         
         // $sortBy = $request->input('sortBy') ? $request->input('sortBy') : 'categories.priority';
         $sortBy = $request->input('sortBy') ? $request->input('sortBy') : 'categories.category_order';
@@ -28,7 +28,7 @@ class CategoryService
         $offset = !empty($request->input('offset')) ? $request->input('offset') : 0;
         $limit = !empty($request->input('limit')) ? $request->input('limit') : config('Reading.records_per_page');
 
-       
+
         // Apply specific field filters
         if ($request->filled('name')) {
             $query->where('name', 'like', '%' . $request->input('name') . '%');

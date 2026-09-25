@@ -370,6 +370,7 @@ Route::prefix('')->name('admin-')->group(function () {
         Route::match(['get', 'post'], '/category/demo-edit/{enuserid}', [App\Http\Controllers\Admin\CategoryController::class, 'editDemo'])->name('category.editDemo');
         Route::match(['get', 'post'], '/category/demo-update/{enuserid}', [App\Http\Controllers\Admin\CategoryController::class, 'updateDemo'])->name('category.updateDemo');
 
+        Route::post('excel-import',[CategoryController::class,'importExcelDataIntoTbl'])->name('category.importExcel'); 
 
         /**  SubCategory routes **/
         Route::match(['get', 'post'], '/sub-category/{endesid?}', [App\Http\Controllers\Admin\SubCategoryController::class, 'index'])->name('sub-category.index');

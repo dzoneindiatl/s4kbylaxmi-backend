@@ -160,16 +160,18 @@
                                     <label for="selectOptions" class="form-label">Bulk Action:</label>
                                     <select name="bulk_action" class="form-select" id="selectOptions">
                                         <option value="" selected>Select Bulk</option>
+                                         <option value="1">Mark as draft (active)</option>
+                                        <option value="2">mark as draft (In-active)</option>
                                         <option value="3">Mark as published</option>
                                         <option value="4">Mark as unpublished</option>
-                                        <option value="1">Mark as draft (active)</option>
-                                        <option value="2">mark as draft (In-active)</option>
                                         <option value="5">Mark as featured (active)</option>
                                         <option value="6">Mark as featured (In-active)</option>
                                         <option value="7">Mark as new arrivals (active)</option>
                                         <option value="8">Mark as new arrivals (In-active)</option>
                                         <option value="9">Mark as Best Seller (active)</option>
                                         <option value="10">Mark as Best Seller (In-active)</option>
+                                        <option value="11">Mart as Trending (active)</option>
+                                        <option value="12">Mark as Trending (In-active)</option>
                                     </select>
                                 </div>
                                 <div class="col-2">

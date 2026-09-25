@@ -118,6 +118,11 @@
                         <a href="{{ route('admin-category.export-category') }}" class="btn btn-success"
                             style="margin-right: 10px;">Export</a>
 
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importCategoryModal">
+                            Import Category
+                        </button>
+                        <a href="{{ asset('uploads/category_format.xlsx') }}" class="btn btn-secondary" style="margin-right:10px;">Download excel format</a>    
+
                     </div>
                 </div>
 
@@ -213,51 +218,38 @@
                         @endif
                     </tbody>
                 </table>
-                @if ($results->isNotEmpty() && $totalResults > Config('Reading.records_per_page'))
-                    <div class="my-3" style="display: flex; justify-content: center;">
-                        <button class="btn btn-primary-light btn-border-down" fdprocessedid="l5zhli" id="load-more"
-                            data-offset="{{ Config('Reading.records_per_page') }}" data-default-offset="0"
-                            data-limit="{{ Config('Reading.records_per_page') }}"
-                            data-default-limit="{{ Config('Reading.records_per_page') }}">
-                            <span class="loadMoreText me-2">Load More</span>
-                            <span class="loading"><i class="ri-refresh-line fs-16"></i></span>
-                        </button>
-                    </div>
-                @else
-                    <div class="my-3" style="display: flex; justify-content: center;">
-                        <button class="btn btn-primary-light btn-border-down" style="display:none;"
-                            fdprocessedid="l5zhli" id="load-more" data-offset="{{ Config('Reading.records_per_page') }}"
-                            data-default-offset="0" data-limit="{{ Config('Reading.records_per_page') }}"
-                            data-default-limit="{{ Config('Reading.records_per_page') }}">
-                            <span class="loadMoreText me-2">Load More</span>
-                            <span class="loading"><i class="ri-refresh-line fs-16"></i></span>
-                        </button>
-                    </div>
-                @endif
             </div>
         </div>
     </div>
+
+<div class="modal fade" id="importCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <form action="{{ route('admin-category.importExcel') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Import Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="file" name="file" class="form-control" accept=".xlsx,.xls" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Upload</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
     <!-- Datatables Cdn -->
-   
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
     <script src="{{ asset('assets/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
     <script>
         var routeName = '{{ route($listRouteName) }}';
     </script>
-    <script src="{{ asset('assets/js/datatables.js') }}"></script>
-    
     <script src="{{ asset('assets/libs/sweetalert2/sweetalert2.min.js') }}"></script>
     <script src="{{ asset('assets/js/sweet-alerts.js') }}"></script>
 
