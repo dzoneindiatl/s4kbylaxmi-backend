@@ -8,6 +8,10 @@ class Attribute extends Model
 {
     protected $table = 'attributes';
 
+    protected $fillable = [
+        'name',
+    ];
+
     public function scopeActive($query)
     {
         return $query->where('is_active', 1);
