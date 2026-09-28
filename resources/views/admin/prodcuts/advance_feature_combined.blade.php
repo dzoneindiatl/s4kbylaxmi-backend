@@ -2,9 +2,9 @@
 | Edit Variant Modal Section |
 =========================== -->
 <?php
-   $images = \App\Models\ProductGraphics::where('product_id', $product->id)->where('variant_id',$product->id)->where('graphic_type','image')->get();
-   $videos = \App\Models\ProductGraphics::where('product_id', $product->id)->where('variant_id',$product->id)->where('graphic_type','video')->get();
-   $imagePath = config('constant.PRODUCT_IMAGE_PATH'); 
+$images = \App\Models\ProductGraphics::where('product_id', $product->id)->where('graphic_type', 'image')->get();
+$videos = \App\Models\ProductGraphics::where('product_id', $product->id)->where('graphic_type', 'video')->get();
+$imagePath = config('constant.PRODUCT_IMAGE_PATH');
 ?>
 <div id="formErrorPopup" class="alert alert-danger d-none">
     <strong>⚠️ Please fix the following:</strong>
@@ -29,13 +29,15 @@
                         <!-- Variant Name -->
                         <div class="col-12 mb-3">
                             <label for="v_name">Variant Name *</label>
-                            <input type="text" class="form-control" name="v_name" id="v_name" placeholder="Variant Name">
+                            <input type="text" class="form-control" name="v_name" id="v_name"
+                                placeholder="Variant Name">
                         </div>
 
                         <!-- SKU -->
                         <div class="col-12 mb-3">
                             <label for="v_sku">SKU *</label>
-                            <input type="text" class="form-control" name="v_sku" id="v_sku" placeholder="Variant SKU">
+                            <input type="text" class="form-control" name="v_sku" id="v_sku"
+                                placeholder="Variant SKU">
                         </div>
 
                         <!-- Price & Selling Price -->
@@ -43,11 +45,13 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="v_price">Price *</label>
-                                    <input type="text" class="form-control" name="v_price" id="v_price" placeholder="Variant Price">
+                                    <input type="text" class="form-control" name="v_price" id="v_price"
+                                        placeholder="Variant Price">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="v_sprice">Selling Price *</label>
-                                    <input type="text" class="form-control" name="v_sprice" id="v_sprice" placeholder="Selling Price">
+                                    <input type="text" class="form-control" name="v_sprice" id="v_sprice"
+                                        placeholder="Selling Price">
                                 </div>
                             </div>
                         </div>
@@ -65,8 +69,9 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="discount_popup">Discount</label> 
-                                    <input type="text" class="form-control" name="discount_popup" id="discount_popup" placeholder="Discount">
+                                    <label for="discount_popup">Discount</label>
+                                    <input type="text" class="form-control" name="discount_popup" id="discount_popup"
+                                        placeholder="Discount">
                                 </div>
                             </div>
                         </div>
@@ -74,12 +79,14 @@
                         <!-- Quantity -->
                         <div class="col-12 mb-3">
                             <label for="v_quantity">Quantity *</label>
-                            <input type="text" class="form-control v-quantity" name="v_quantity" id="v_quantity" placeholder="Variant Quantity">
+                            <input type="text" class="form-control v-quantity" name="v_quantity" id="v_quantity"
+                                placeholder="Variant Quantity">
                         </div>
 
                         <!-- Submit Button -->
                         <div class="col-12 mt-3">
-                            <button type="button" onclick="submit_form('edit_varient_form')" class="btn btn-primary">Submit</button>
+                            <button type="button" onclick="submit_form('edit_varient_form')"
+                                class="btn btn-primary">Submit</button>
                         </div>
                     </div>
                 </form>
@@ -102,7 +109,9 @@
                     <div class="col-md-4 mb-3">
                         <div class="form-group">
                             <label for="name">Name <span class="text-danger">*</span></label>
-                            <input type="text" name="name" id="product_name" class="form-control @error('name') is-invalid @enderror" value="{{ $product->name }}" required>
+                            <input type="text" name="name" id="product_name"
+                                class="form-control @error('name') is-invalid @enderror" value="{{ $product->name }}"
+                                required>
                             @if ($errors->has('name'))
                                 <div class=" invalid-feedback">
                                     {{ $errors->first('name') }}
@@ -116,9 +125,11 @@
                             <label for="status">Status <span class="text-danger">*</span></label>
                             <select name="status" id="status" class="form-control">
                                 <option value="">Select Status</option>
-                                <option value="1" @if($product->is_active == "1") selected @endif>Published</option>
-                                <option value="0" @if($product->is_active == "0") selected @endif>Unpublished</option>
-                                <option value="2" @if($product->is_active == "2") selected @endif>Draft</option>
+                                <option value="1" @if ($product->is_active == '1') selected @endif>Published
+                                </option>
+                                <option value="0" @if ($product->is_active == '0') selected @endif>Unpublished
+                                </option>
+                                <option value="2" @if ($product->is_active == '2') selected @endif>Draft</option>
                             </select>
                         </div>
                         <span id="productStatusError"></span>
@@ -146,20 +157,23 @@
                             <div class="col  mb-3">
                                 <div class="form-group">
                                     <label for="sku">SKU <!--<span class="text-danger">*</span> --></label>
-                                    <input type="text" class="form-control @error('sku') is-invalid @enderror" id="sku" value="{{ $product->sku }}" name="sku"  placeholder="SKU">
+                                    <input type="text" class="form-control @error('sku') is-invalid @enderror"
+                                        id="sku" value="{{ $product->sku }}" name="sku" placeholder="SKU">
                                     <span id="skuError" class="text text-danger"></span>
                                 </div>
                             </div>
                             <div class="col  mb-3">
                                 <div class="form-group">
                                     <label for="hsn">HSN</label>
-                                    <input type="text" class="form-control" id="hsn" name="hsn" placeholder="HSN" value="{{ $product->hsn }}">
+                                    <input type="text" class="form-control" id="hsn" name="hsn"
+                                        placeholder="HSN" value="{{ $product->hsn }}">
                                 </div>
                             </div>
                             <div class="col  mb-3">
                                 <div class="form-group">
                                     <label for="bar_code">Barcode</label>
-                                    <input type="text" class="form-control" id="bar_code" name="bar_code" value="{{ $product->bar_code }}" placeholder="Barcode">
+                                    <input type="text" class="form-control" id="bar_code" name="bar_code"
+                                        value="{{ $product->bar_code }}" placeholder="Barcode">
                                 </div>
                             </div>
                         </div>
@@ -175,32 +189,37 @@
             <hr>
             <div class="card-body">
                 <div class="row">
-                    @foreach($productDetailSections as $key =>  $detail)
+                    @foreach ($productDetailSections as $key => $detail)
                         <div class="col-md-6  mb-3">
                             <div class="form-group">
-                                     @php
-                                        $section = Str::snake(
-                                            preg_replace('/[^A-Za-z0-9]+/', ' ', $detail->section_name)
-                                        );
-                                        $fieldName = \Illuminate\Support\Str::snake(preg_replace('/[^A-Za-z0-9]+/', ' ', $detail->section_name));
-                                        $nameAttribute = "content_".$key+1; 
-                                    @endphp
+                                @php
+                                    $section = Str::snake(preg_replace('/[^A-Za-z0-9]+/', ' ', $detail->section_name));
+                                    $fieldName = \Illuminate\Support\Str::snake(
+                                        preg_replace('/[^A-Za-z0-9]+/', ' ', $detail->section_name),
+                                    );
+                                    $nameAttribute = 'content_' . $key + 1;
+                                @endphp
                                 <label for="{{ $section }}">{{ $detail->section_name }}</label>
-                                @if($detail->field_type == 'ckeditor' || $detail->field_type == 'textarea')
-                                    <textarea class="form-control @if($detail->field_type == 'ckeditor') ck_content @endif"  name="content[]" id="{{ $section }}" rows="4">@if($product->$nameAttribute)  {{ $product->$nameAttribute }} @else {{ $detail->content }} @endif  </textarea>
-                                @else 
-                                <input type="text" class="form-control @error($fieldName) is-invalid @enderror" name="content[]" 
-                                            id="{{ $fieldName }}" 
-                                            value="<?php if($product->{'content_'.$key}){
-                                                echo @$product->{'content_'.$key};
-                                            } else {
-                                                echo $detail->content;    
-                                            } ?>" 
-                                            />
-                                @endif 
+                                @if ($detail->field_type == 'ckeditor' || $detail->field_type == 'textarea')
+                                    <textarea class="form-control @if ($detail->field_type == 'ckeditor') ck_content @endif" name="content[]"
+                                        id="{{ $section }}" rows="4">
+@if ($product->$nameAttribute)
+{{ $product->$nameAttribute }}
+@else
+{{ $detail->content }}
+@endif
+</textarea>
+                                @else
+                                    <input type="text" class="form-control @error($fieldName) is-invalid @enderror"
+                                        name="content[]" id="{{ $fieldName }}" value="<?php if ($product->{'content_' . $key}) {
+                                            echo @$product->{'content_' . $key};
+                                        } else {
+                                            echo $detail->content;
+                                        } ?>" />
+                                @endif
                             </div>
                         </div>
-                    @endforeach 
+                    @endforeach
                 </div>
             </div>
 
@@ -335,37 +354,40 @@
                     </div>
                 </div>
                 {{-- Modal for New Attribute --}}
-                <div class="modal fade" id="addAttributeModal" tabindex="-1" aria-labelledby="addAttributeModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Add New Attribute</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body" id="attributes_container">
-                            <div class="mb-3">
-                                <label for="attributeName" class="form-label">Attribute Name</label>
-                                <select class="form-select attribute-select" id="attributeName" name="attributeName">
-                                    <option value="">Select an option</option>
-                                </select>
+                <div class="modal fade" id="addAttributeModal" tabindex="-1"
+                    aria-labelledby="addAttributeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Add New Attribute</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
                             </div>
-                            <div class="mb-3">
-                                <label for="attributeValue" class="form-label">Attribute Value</label>
-                                <input type="text" class="form-control" id="attributeValue"
-                                    placeholder="Enter multiple values separated by comma">
-                                <small class="text-muted">Enter multiple values separated by comma (e.g. red, green,
-                                    blue)</small>
+                            <div class="modal-body" id="attributes_container">
+                                <div class="mb-3">
+                                    <label for="attributeName" class="form-label">Attribute Name</label>
+                                    <select class="form-select attribute-select" id="attributeName"
+                                        name="attributeName">
+                                        <option value="">Select an option</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="attributeValue" class="form-label">Attribute Value</label>
+                                    <input type="text" class="form-control" id="attributeValue"
+                                        placeholder="Enter multiple values separated by comma">
+                                    <small class="text-muted">Enter multiple values separated by comma (e.g. red,
+                                        green,
+                                        blue)</small>
+                                </div>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" id="saveAttributeButton" class="btn btn-primary">Save
-                                Attribute</button>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary"
+                                    data-bs-dismiss="modal">Close</button>
+                                <button type="button" id="saveAttributeButton" class="btn btn-primary">Save
+                                    Attribute</button>
+                            </div>
                         </div>
                     </div>
-                </div>
                 </div>
                 {{-- 4. Pricing --}}
                 <div class="card-header mb-3">
@@ -380,7 +402,7 @@
                         <label for="buying_price">MRP<span class="text-danger">*</span></label>
                         <input type="number" id="buying_price" name="buying_price" class="form-control" required
                             value="{{ $product->buying_price }}" />
-                        <span id="buyingPriceError" class="text text-danger"></span>    
+                        <span id="buyingPriceError" class="text text-danger"></span>
                     </div>
 
                     <div class="col-4 mb-3">
@@ -398,7 +420,7 @@
                         <label for="discount">Discount</label>
                         <input type="number" id="discount" name="discount" class="form-control"
                             value="{{ $product->discount }}" />
-                            
+
                     </div>
 
                     <div class="col-4 mb-3">
@@ -411,7 +433,7 @@
                         <label for="qty">Quantity <span class="text-danger">*</span></label>
                         <input type="number" id="qty" name="qty" class="form-control" required
                             value="{{ $product->qty }}" />
-                            <span id="qtyError" class="text text-danger"></span>
+                        <span id="qtyError" class="text text-danger"></span>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -426,148 +448,193 @@
                             value="{{ $product->min_selling_units }}">
                     </div>
                 </div>
-                
+
             </div>
 
-            
-            
+
+
             {{-- Variant Section --}}
             <div class="card mt-3">
-                @if($product->product_type==2)
-                <div class="card-body" id="variant_group_details test2">
-                    {!! $variantReleatedProduct !!}
-                    <span id="imageError"> </span>
-                </div>
+                @if ($product->product_type == 2)
+                    <div class="card-body" id="variant_group_details test2">
+                        {!! $variantReleatedProduct !!}
+                        <span id="imageError"> </span>
+                    </div>
                 @else
-                <div class="card-body" id="variant_group_details">
-                    <div class="card mb-4 shadow-sm variant_group_row" id="simple_product_{{ $product->id }}">
-                        <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                            <label class="form-check-label" for="out_of_stock_{{ $product->id }}">
-                                Upload Product Image & Video
-                            </label>
-                        </div>
-                        <div class="row align-items-start mb-4">
-                            <div class="col-auto m-3">
-                                <button type="button" class="btn btn-outline-secondary image_upload_button" data-bs-toggle="modal" data-bs-target="#uploadModal_{{ $product->id }}">
-                                    <div class="text-center">
-                                        <div class="fs-2 fw-bold">+</div>
-                                        <div class="small">Add Images & Video</div>
-                                    </div>
-                                </button>
+                    <div class="card-body" id="variant_group_details">
+                        <div class="card mb-4 shadow-sm variant_group_row" id="simple_product_{{ $product->id }}">
+                            <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                                <label class="form-check-label" for="out_of_stock_{{ $product->id }}">
+                                    Upload Product Image & Video
+                                </label>
                             </div>
-                           <div class="col">
-                                {{-- Image Previews --}}
-                                <div class="image-thumbnails-1 d-flex flex-wrap gap-2 mb-2 mt-2">
-                                    @if(!empty($images))
-                                        @foreach($images as $k=>$image)
-                                        @php
-                                            $frontCheck = !empty($image['is_front'])? "checked":"";
-                                            $backCheck = !empty($image['is_back'])?"checked":"";
-                                            $variantIconCheck = !empty($image['is_variant_icon'])?"checked":"";
-                                        @endphp
-                                            <div class="image-preview-container position-relative" style="width: 100px; height: 170px;">
-                                                <img src="{{ $imagePath . $image->graphic }}" alt="Product Image" class="rounded border w-100 " style="object-fit: cover;height:100px"> 
-                                                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0 delete-image" data-id="{{ $image->id }}" style="width: 22px; height: 22px; line-height: 1;">×</button>
-                                                <div class="form-check form-switch d-flex align-items-center justify-content-center mb-0 px-0">
-                                                    <input class="form-check-input updateFrontBackIcon" type="radio" name="front_image[{{ $image['product_id'] ?? 0 }}]" data-vid="{{ $image['product_id'] ?? 0 }}" data-id="{{ $image['id'] }}" data-type="front" data-productId="{{ $image['product_id'] }}" value="{{ $image['product_id'] ?? 0 }}-{{ $image['id'] }}" {{ $frontCheck }} id="frontSwitch_$image['product_id']_{{ $image['id'] }}">
-                                                    <label class="form-check-label small" for="frontSwitch_{{ $image['product_id'] ?? 0 }}_{{ $image['id'] }}">
-                                                        Front Image
-                                                    </label>
-                                                </div>
-                                                <div class="form-check form-switch d-flex align-items-center justify-content-center px-0">
-                                                    <input class="form-check-input updateFrontBackIcon" type="radio" name="back_image[{{ $image['product_id'] ?? 0 }}]" data-vid="{{ $image['product_id'] ?? 0 }}" data-id="{{ $image['id'] }}" data-type="back" data-productId="{{ $image['product_id'] }}" value="{{ $image['product_id'] ?? 0 }}-{{ $image['id'] }}" {{ $backCheck }} id="backSwitch_{{ $image['product_id'] ?? 0 }}_{{ $image['id'] }}">
-                                                    <label class="form-check-label small" for="backSwitch_{{ $image['product_id'] ?? 0 }}_{{ $image['id'] }}">
-                                                        Back Image
-                                                    </label>
-                                                </div>
-                                                <div class="form-check form-switch d-flex align-items-center justify-content-center px-0">
-                                                    <input class="form-check-input updateFrontBackIcon" type="radio" name="variant_icon[{{ $image['product_id'] ?? 0 }}]" data-vid="{{ $image['product_id'] ?? 0 }}" data-id="{{ $image['id'] }}" data-type="icon" data-productId="{{ $image['product_id'] }}" value="{{ $image['product_id'] ?? 0 }}-{{ $image['id'] }}" {{ $variantIconCheck }} id="iconSwitch_{{ $image['product_id'] ?? 0 }}_{{ $image['id'] }}">
-                                                    <label class="form-check-label small" for="iconSwitch_{{ $image['product_id'] ?? 0 }}_{{ $image['id'] }}">
-                                                    Variant Icon
-                                                    </label>
-                                                </div>    
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                </div>
-
-                                <div class="image-thumbnails d-flex flex-wrap gap-2 mb-2 mt-2">
-                                </div>
-
-                                {{-- Video Previews --}}
-                                <div class="video-thumbnails-1 d-flex flex-wrap gap-2 mt-2">
-                                    @if(!empty($videos))
-                                        @foreach($videos as $video)
-                                            <div class="image-preview-container position-relative" style="width: 100px; height: 100px;">
-                                                <video class="rounded border w-100 h-100" style="object-fit: cover;" controls>
-                                                    <source src="{{ asset($imagePath . $video->graphic) }}" type="video/mp4">
-                                                    Your browser does not support the video tag.
-                                                </video>
-                                                <button type="button"
-                                                    class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0 delete-image"
-                                                    data-id="{{ $video->id }}"
-                                                    style="width: 22px; height: 22px; line-height: 1;">×</button>
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                </div>
-                                <div class="video-thumbnails d-flex flex-wrap gap-2 mt-2">
-                                </div>
-                            </div>
-                            
-                        </div>
-
-                        <!-- Upload Modal -->
-                        <div class="modal fade" id="uploadModal_{{ $product->id}}" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog modal-lg modal-dialog-centered">
-                                <div class="modal-content p-3">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Upload Files for Group</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="mb-3">
-                                            <label class="form-label fw-semibold">Select Images</label>
-                                            <input type="file" 
-                                                name="variant_images[{{ $product->id }}][]" 
-                                                accept="image/*" 
-                                                multiple
-                                                onchange="previewImagesSimple(event, {{ $product->id }})" 
-                                                class="form-control">
+                            <div class="row align-items-start mb-4">
+                                <div class="col-auto m-3">
+                                    <button type="button" class="btn btn-outline-secondary image_upload_button"
+                                        data-bs-toggle="modal" data-bs-target="#uploadModal_{{ $product->id }}">
+                                        <div class="text-center">
+                                            <div class="fs-2 fw-bold">+</div>
+                                            <div class="small">Add Images & Video</div>
                                         </div>
-                                        <div class="mb-3">
-                                            <label class="form-label fw-semibold">Select Video</label>
-                                            <input type="file" 
-                                                name="variant_video[{{ $product->id }}]" 
-                                                accept="video/*"
-                                                onchange="previewVideoSimple(event, {{ $product->id }})" 
-                                                class="form-control">
-                                        </div>
-                                        <hr/>
-                                        <h6 class="fw-bold mb-2">Image Preview</h6>
-                                        <div id="preview_images_{{ $product->id }}" class="d-flex flex-wrap gap-2"></div>
+                                    </button>
+                                </div>
+                                <div class="col">
+                                    {{-- Image Previews --}}
+                                    <div class="image-thumbnails-1 d-flex flex-wrap gap-2 mb-2 mt-2">
+                                        @if (!empty($images))
+                                            @foreach ($images as $k => $image)
+                                                @php
+                                                    $frontCheck = !empty($image['is_front']) ? 'checked' : '';
+                                                    $backCheck = !empty($image['is_back']) ? 'checked' : '';
+                                                    $variantIconCheck = !empty($image['is_variant_icon'])
+                                                        ? 'checked'
+                                                        : '';
+                                                @endphp
+                                                <div class="image-preview-container position-relative"
+                                                    style="width: 100px; height: 170px;">
+                                                    <img src="{{ $imagePath . $image->graphic }}" alt="Product Image"
+                                                        class="rounded border w-100 "
+                                                        style="object-fit: cover;height:100px">
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0 delete-image"
+                                                        data-id="{{ $image->id }}"
+                                                        style="width: 22px; height: 22px; line-height: 1;">×</button>
+                                                    <div
+                                                        class="form-check form-switch d-flex align-items-center justify-content-center mb-0 px-0">
+                                                        <input class="form-check-input updateFrontBackIcon"
+                                                            type="radio"
+                                                            name="front_image[{{ $image['product_id'] ?? 0 }}]"
+                                                            data-vid="{{ $image['product_id'] ?? 0 }}"
+                                                            data-id="{{ $image['id'] }}" data-type="front"
+                                                            data-productId="{{ $image['product_id'] }}"
+                                                            value="{{ $image['product_id'] ?? 0 }}-{{ $image['id'] }}"
+                                                            {{ $frontCheck }}
+                                                            id="frontSwitch_$image['product_id']_{{ $image['id'] }}">
+                                                        <label class="form-check-label small"
+                                                            for="frontSwitch_{{ $image['product_id'] ?? 0 }}_{{ $image['id'] }}">
+                                                            Front Image
+                                                        </label>
+                                                    </div>
+                                                    <div
+                                                        class="form-check form-switch d-flex align-items-center justify-content-center px-0">
+                                                        <input class="form-check-input updateFrontBackIcon"
+                                                            type="radio"
+                                                            name="back_image[{{ $image['product_id'] ?? 0 }}]"
+                                                            data-vid="{{ $image['product_id'] ?? 0 }}"
+                                                            data-id="{{ $image['id'] }}" data-type="back"
+                                                            data-productId="{{ $image['product_id'] }}"
+                                                            value="{{ $image['product_id'] ?? 0 }}-{{ $image['id'] }}"
+                                                            {{ $backCheck }}
+                                                            id="backSwitch_{{ $image['product_id'] ?? 0 }}_{{ $image['id'] }}">
+                                                        <label class="form-check-label small"
+                                                            for="backSwitch_{{ $image['product_id'] ?? 0 }}_{{ $image['id'] }}">
+                                                            Back Image
+                                                        </label>
+                                                    </div>
+                                                    <div
+                                                        class="form-check form-switch d-flex align-items-center justify-content-center px-0">
+                                                        <input class="form-check-input updateFrontBackIcon"
+                                                            type="radio"
+                                                            name="variant_icon[{{ $image['product_id'] ?? 0 }}]"
+                                                            data-vid="{{ $image['product_id'] ?? 0 }}"
+                                                            data-id="{{ $image['id'] }}" data-type="icon"
+                                                            data-productId="{{ $image['product_id'] }}"
+                                                            value="{{ $image['product_id'] ?? 0 }}-{{ $image['id'] }}"
+                                                            {{ $variantIconCheck }}
+                                                            id="iconSwitch_{{ $image['product_id'] ?? 0 }}_{{ $image['id'] }}">
+                                                        <label class="form-check-label small"
+                                                            for="iconSwitch_{{ $image['product_id'] ?? 0 }}_{{ $image['id'] }}">
+                                                            Variant Icon
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @endif
+                                    </div>
 
-                                        <h6 class="fw-bold mt-4 mb-2">Video Preview</h6>
-                                        <div id="preview_video_{{ $product->id }}" class="d-flex flex-wrap gap-2"></div>
+                                    <div class="image-thumbnails d-flex flex-wrap gap-2 mb-2 mt-2">
+                                    </div>
+
+                                    {{-- Video Previews --}}
+                                    <div class="video-thumbnails-1 d-flex flex-wrap gap-2 mt-2">
+                                        @if (!empty($videos))
+                                            @foreach ($videos as $video)
+                                                <div class="image-preview-container position-relative"
+                                                    style="width: 100px; height: 100px;">
+                                                    <video class="rounded border w-100 h-100"
+                                                        style="object-fit: cover;" controls>
+                                                        <source src="{{ asset($imagePath . $video->graphic) }}"
+                                                            type="video/mp4">
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-danger position-absolute top-0 end-0 p-0 delete-image"
+                                                        data-id="{{ $video->id }}"
+                                                        style="width: 22px; height: 22px; line-height: 1;">×</button>
+                                                </div>
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                    <div class="video-thumbnails d-flex flex-wrap gap-2 mt-2">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- Upload Modal -->
+                            <div class="modal fade" id="uploadModal_{{ $product->id }}" tabindex="-1"
+                                aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content p-3">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Upload Files for Group</h5>
+                                            <button type="button" class="btn-close"
+                                                data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label class="form-label fw-semibold">Select Images</label>
+                                                <input type="file" name="variant_images[{{ $product->id }}][]"
+                                                    accept="image/*" multiple
+                                                    onchange="previewImagesSimple(event, {{ $product->id }})"
+                                                    class="form-control">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-semibold">Select Video</label>
+                                                <input type="file" name="variant_video[{{ $product->id }}]"
+                                                    accept="video/*"
+                                                    onchange="previewVideoSimple(event, {{ $product->id }})"
+                                                    class="form-control">
+                                            </div>
+                                            <hr />
+                                            <h6 class="fw-bold mb-2">Image Preview</h6>
+                                            <div id="preview_images_{{ $product->id }}"
+                                                class="d-flex flex-wrap gap-2"></div>
+
+                                            <h6 class="fw-bold mt-4 mb-2">Video Preview</h6>
+                                            <div id="preview_video_{{ $product->id }}"
+                                                class="d-flex flex-wrap gap-2"></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>    
-                </div>
+                    </div>
                 @endif
                 <div class="row mt-3">
                     <h3><u>Seo Feature</u></h3>
                     <div class="col">
                         <div class="form-group">
                             <label for="meta_title">Meta Title <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="meta_title" id="meta_title" value="{{$product->meta_title}}" />
+                            <input type="text" class="form-control" name="meta_title" id="meta_title"
+                                value="{{ $product->meta_title }}" />
                         </div>
                     </div>
                     <div class="col">
                         <div class="form-group">
                             <label for="meta_keywords">Meta Keywords</label>
-                            <input type="text" class="form-control" name="meta_keywords" id="meta_keywords" value="{{$product->meta_keywords}}"  />
+                            <input type="text" class="form-control" name="meta_keywords" id="meta_keywords"
+                                value="{{ $product->meta_keywords }}" />
                         </div>
                     </div>
                 </div>
@@ -575,7 +642,7 @@
                     <div class="col">
                         <div class="form-group">
                             <label for="meta_description">Meta Description </label>
-                            <textarea class="form-control" name="meta_description" id="meta_description" cols="30" rows="3">{{$product->meta_description }}</textarea>
+                            <textarea class="form-control" name="meta_description" id="meta_description" cols="30" rows="3">{{ $product->meta_description }}</textarea>
                         </div>
                     </div>
                 </div>
@@ -584,22 +651,23 @@
                     <div class="col">
                         <div class="form-group">
                             <label for="seo_content">Web SEO Content </label>
-                            <textarea class="form-control" name="seo_content" id="seo_content" cols="30" rows="3">{{$product->seo_content }}</textarea>
+                            <textarea class="form-control" name="seo_content" id="seo_content" cols="30" rows="3">{{ $product->seo_content }}</textarea>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
 
             <div class="mb-3 text-first btn_add mt-3">
                 <?php
-                if(@$product->product_type==1){
+                if (@$product->product_type == 1) {
                     $previousStep = 'step1';
                 } else {
                     $previousStep = 'step2';
                 }
                 ?>
-                <button type="button" class="btn btn-primary prevBtn btn-lg" onclick="onclickPrevious('step1')">Previous</button>
+                <button type="button" class="btn btn-primary prevBtn btn-lg"
+                    onclick="onclickPrevious('step1')">Previous</button>
                 <button type="button" id="finish" class="btn btn-primary nextBtn btn-lg">Save</button>
                 <button type="button" id="saveAsdraf" class="btn btn-danger nextBtn btn-lg">Save as Draf</button>
             </div>
@@ -809,19 +877,17 @@
 <script>
     CKEDITOR.replace('seo_content');
     CKEDITOR.replace('meta_description');
-    CKEDITOR.replace('short_description'); 
+    CKEDITOR.replace('short_description');
 </script>
-@foreach($productDetailSections as $datas)
-     @php
-        $section = Str::snake(
-            preg_replace('/[^A-Za-z0-9]+/', ' ', $datas->section_name)
-        );
+@foreach ($productDetailSections as $datas)
+    @php
+        $section = Str::snake(preg_replace('/[^A-Za-z0-9]+/', ' ', $datas->section_name));
     @endphp
-    @if($datas->field_type == 'ckeditor')
+    @if ($datas->field_type == 'ckeditor')
         <script>
             CKEDITOR.replace("{{ $section }}")
         </script>
-    @endif 
+    @endif
 @endforeach
 <script>
     var getAttributesValues = "{{ route('admin-product-attribute-values') }}";
@@ -834,9 +900,8 @@
 
 <script src="{{ asset('assets/js/product/add-product.js') }}"></script>
 <script>
-
-    $(document).off('click', '.delete-image').on('click', '.delete-image', function () { 
-        const imageId   = $(this).data('id'); 
+    $(document).off('click', '.delete-image').on('click', '.delete-image', function() {
+        const imageId = $(this).data('id');
         const container = $(this).closest('.image-preview-container');
 
         if (!confirm("Are you sure you want to delete this image?")) return;
@@ -848,34 +913,39 @@
                 _token: '{{ csrf_token() }}',
                 id: imageId
             },
-            success: function (response) {
+            success: function(response) {
                 if (response.success) {
                     container.remove();
                 } else {
                     alert(response.message || 'Failed to delete image.');
                 }
             },
-            error: function () {
+            error: function() {
                 alert('Server error. Please try again.');
             }
         });
     });
 
-    $(document).on('change', '.updateFrontBackIcon', function () {
+    $(document).on('change', '.updateFrontBackIcon', function() {
         let vid = $(this).data('vid');
         let id = $(this).data('id');
         let type = $(this).data('type');
         let productid = $(this).data('productid');
-        if(vid && id && type) {
+        if (vid && id && type) {
             $.ajax({
-                url:"{{ route('admin-product-updateFrontBackIcon') }}",
-                data:{vid:vid,id:id,type:type,productid},
-                dataType:"json",
-                method:"post",
-                success:function(resp){
+                url: "{{ route('admin-product-updateFrontBackIcon') }}",
+                data: {
+                    vid: vid,
+                    id: id,
+                    type: type,
+                    productid
+                },
+                dataType: "json",
+                method: "post",
+                success: function(resp) {
                     console.log(resp);
                 },
-                error:function(){
+                error: function() {
 
                 }
             });
@@ -912,41 +982,43 @@
             // if (form.valid()) {
             const formElement = $('#productForm')[0];
             var globalSku = $('#sku').val();
-            var globalBuyingPrice = $('#buying_price').val(); 
-            var globalQty = $('#qty').val(); 
-            var globalProductName = $('#product_name').val(); 
+            var globalBuyingPrice = $('#buying_price').val();
+            var globalQty = $('#qty').val();
+            var globalProductName = $('#product_name').val();
 
-            var globalProductStatus = $('#status').val(); 
+            var globalProductStatus = $('#status').val();
 
-            if(globalProductName == '' || globalProductName == null || globalProductName.length < 3 || globalProductName.length > 254){
+            if (globalProductName == '' || globalProductName == null || globalProductName.length < 3 ||
+                globalProductName.length > 254) {
                 $('#productNameError').text("Please Enter Product Name");
-                return false;  
+                return false;
             }
 
-            if(globalProductStatus == '' || globalProductStatus == null){
-                $('#productStatusError').text('Please Select any status'); 
-                return false; 
+            if (globalProductStatus == '' || globalProductStatus == null) {
+                $('#productStatusError').text('Please Select any status');
+                return false;
             }
 
-            if(globalSku == '' || globalSku == null ){
-                $('#skuError').text("Please Enter Product Sku"); 
-                return false; 
-            } 
-
-            if(globalBuyingPrice == '' || globalBuyingPrice == null || globalBuyingPrice == 0){
-                $('#buyingPriceError').text("Please Enter Product MRP"); 
-                  return false; 
+            if (globalSku == '' || globalSku == null) {
+                $('#skuError').text("Please Enter Product Sku");
+                return false;
             }
 
-            if(globalQty == '' || globalQty == null || globalQty == 0){ 
-                $('#qtyError').text("Please Enter Product Quantity"); 
-                  return false; 
+            if (globalBuyingPrice == '' || globalBuyingPrice == null || globalBuyingPrice == 0) {
+                $('#buyingPriceError').text("Please Enter Product MRP");
+                return false;
             }
-            document.querySelectorAll('#productForm input[type="file"][name^="variant_images["]').forEach(input => {
-                input.removeAttribute('name');
-            });
+
+            if (globalQty == '' || globalQty == null || globalQty == 0) {
+                $('#qtyError').text("Please Enter Product Quantity");
+                return false;
+            }
+            document.querySelectorAll('#productForm input[type="file"][name^="variant_images["]')
+                .forEach(input => {
+                    input.removeAttribute('name');
+                });
             const formData = new FormData(formElement);
-            $('.updateFrontBackIcon:checked').each(function () {
+            $('.updateFrontBackIcon:checked').each(function() {
 
                 const variantId = $(this).data('vid');
                 const type = $(this).data('type');
@@ -957,13 +1029,13 @@
                 }
 
                 if (type === 'front') {
-                    formData.append(`existing_front_image[${variantId}]`,graphicId);
+                    formData.append(`existing_front_image[${variantId}]`, graphicId);
 
                 } else if (type === 'back') {
-                    formData.append(`existing_back_image[${variantId}]`,graphicId);
+                    formData.append(`existing_back_image[${variantId}]`, graphicId);
 
                 } else if (type === 'icon') {
-                    formData.append(`existing_variant_icon[${variantId}]`,graphicId);
+                    formData.append(`existing_variant_icon[${variantId}]`, graphicId);
                 }
             });
             Object.entries(window.uploadedImages).forEach(([variantId, images]) => {
@@ -999,9 +1071,9 @@
                         );
                     }
                 });
-            }); 
-            
-            if(nextBtnId == 'saveAsdraf'){ 
+            });
+
+            if (nextBtnId == 'saveAsdraf') {
                 swal.fire({
                     title: "Are you sure?",
                     text: "Want to save this product as draf?",
@@ -1010,37 +1082,36 @@
                     confirmButtonText: "Yes,",
                     cancelButtonText: "No, cancel",
                     reverseButtons: true
-                }).then(function(result){
-                    if(result.isConfirmed){
+                }).then(function(result) {
+                    if (result.isConfirmed) {
                         formData.append("save_as_draf", 1);
-                        submitProductDetail(formData,nextBtnId,$btn); 
+                        submitProductDetail(formData, nextBtnId, $btn);
                     }
-                }); 
-            }
-            else{
+                });
+            } else {
                 let variantErrors = [];
                 let variantIds = new Set();
-                $('.out-of-stock-toggle').each(function(){
+                $('.out-of-stock-toggle').each(function() {
                     const variantId = $(this).data('variant-id');
-                        if (variantId) {
-                            variantIds.add(String(variantId));
-                        }
-                }); 
-                $('.updateFrontBackIcon:checked').each(function () {
+                    if (variantId) {
+                        variantIds.add(String(variantId));
+                    }
+                });
+                $('.updateFrontBackIcon:checked').each(function() {
                     const variantId = $(this).data('vid');
 
                     if (variantId) {
                         variantIds.add(String(variantId));
                     }
                 });
-                variantIds.forEach(function (variantId) {
+                variantIds.forEach(function(variantId) {
                     let hasImage = false;
                     let hasFront = false;
-                    let hasBack = false; 
+                    let hasBack = false;
                     const images = window.uploadedImages?.[variantId] || [];
                     if (images.length > 0) {
                         hasImage = true;
-                        images.forEach(function (imageData) {
+                        images.forEach(function(imageData) {
                             if (imageData.front) {
                                 hasFront = true;
                             }
@@ -1049,7 +1120,7 @@
                             }
                         });
                     }
-                    $('.updateFrontBackIcon:checked').each(function () {
+                    $('.updateFrontBackIcon:checked').each(function() {
 
                         const existingVariantId = String($(this).data('vid'));
                         const type = $(this).data('type');
@@ -1080,7 +1151,7 @@
                             `Variant ${variantId}: Please select a back image.`
                         );
                     }
-                }); 
+                });
                 if (variantErrors.length > 0) {
                     Swal.fire({
                         title: "Image Required",
@@ -1090,8 +1161,8 @@
                     });
                     return false;
                 }
-                submitProductDetail(formData,nextBtnId,$btn); 
-            }    
+                submitProductDetail(formData, nextBtnId, $btn);
+            }
         });
     });
 
@@ -1110,7 +1181,7 @@
         }
     });
 
-    function submitProductDetail(formData,nextBtnId,$btn){
+    function submitProductDetail(formData, nextBtnId, $btn) {
         $.ajax({
             url: "{{ route('admin-product-save.step3') }}",
             type: "POST",
@@ -1118,23 +1189,27 @@
             contentType: false,
             processData: false,
             headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             beforeSend: function() {
-                if(nextBtnId == 'finish'){
-                    $btn.prop('disabled', true).html(`<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Processing...`);
-                }else{
-                    $btn.prop('disabled',true); 
+                if (nextBtnId == 'finish') {
+                    $btn.prop('disabled', true).html(
+                        `<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>Processing...`
+                    );
+                } else {
+                    $btn.prop('disabled', true);
                 }
             },
             success: function(response) {
-                if(!response.success){
-                    Swal.fire({ icon: 'error', title: 'Validation Error', text: response.message });
+                if (!response.success) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Error',
+                        text: response.message
+                    });
                     return false;
-                } 
-                else 
-                {
-                    if(nextBtnId =='finish' || nextBtnId =='saveAsdraf'){
+                } else {
+                    if (nextBtnId == 'finish' || nextBtnId == 'saveAsdraf') {
                         window.location.href = "{{ route('admin-product-list') }}";
                         return false;
                     }
@@ -1145,8 +1220,7 @@
                 }
             },
             error: function(xhr) {
-                if (xhr.status === 422) 
-                {
+                if (xhr.status === 422) {
                     const errors = xhr.responseJSON.errors;
                     $('#formErrorList').empty();
                     $('#formErrorPopup').addClass('d-none');
@@ -1159,24 +1233,23 @@
                         let field = $('[name="' + key + '"]');
                         if (!field.length && key.includes('.')) {
                             const [base, index] = key.split('.');
-                            field = $('[name="' + base + '[' + index +']"]');
+                            field = $('[name="' + base + '[' + index + ']"]');
                         }
                         if (field.length) {
                             field.addClass('is-invalid');
-                            field.after('<div class="invalid-feedback d-block">' +messages[0] + '</div>');
+                            field.after('<div class="invalid-feedback d-block">' + messages[0] +
+                                '</div>');
                         }
                     });
                     $('#formErrorPopup').removeClass('d-none');
                     $btn.prop('disabled', false).html(originalHtml);
-                } 
-                else 
-                {
+                } else {
                     alert('Something went wrong. Please try again.');
                     $btn.prop('disabled', false).html(originalHtml);
                 }
-            },                
+            },
             complete: function() {
-                if(nextBtnId !='finish'){
+                if (nextBtnId != 'finish') {
                     $btn.prop('disabled', false).html(originalHtml);
                 }
             }
